@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <rect width="1200" height="420" rx="16" fill="#0d1117"/>
+  <text x="40" y="46" fill="#e6edf3" font-size="22" font-weight="700">Read the ring: context-window hygiene</text>
+  <text x="40" y="72" fill="#8b949e" font-size="14">The ring at the bottom-right of the chat input shows how full the model's context window is. Fuller isn't better.</text>
+  <!-- three states -->
+  <g font-size="14">
+    <!-- green -->
+    <g transform="translate(40,100)">
+      <rect width="350" height="290" rx="14" fill="#3fb950" fill-opacity="0.08" stroke="#3fb950"/>
+      <circle cx="60" cy="62" r="30" fill="none" stroke="#30363d" stroke-width="8"/>
+      <circle cx="60" cy="62" r="30" fill="none" stroke="#3fb950" stroke-width="8" stroke-dasharray="47 189" transform="rotate(-90 60 62)" stroke-linecap="round"/>
+      <text x="60" y="67" fill="#e6edf3" text-anchor="middle" font-weight="700" font-size="14">20%</text>
+      <text x="110" y="55" fill="#7ee787" font-weight="700" font-size="18">Focused</text>
+      <text x="110" y="78" fill="#8b949e">under ~40%</text>
+      <text x="24" y="132" fill="#e6edf3">• One task, relevant files only</text>
+      <text x="24" y="158" fill="#e6edf3">• Instructions still "fresh"</text>
+      <text x="24" y="184" fill="#e6edf3">• Cheapest per turn</text>
+      <text x="24" y="236" fill="#7ee787" font-weight="700">Keep going.</text>
+      <text x="24" y="260" fill="#8b949e">Add context with #file, not #codebase.</text>
+    </g>
+    <!-- amber -->
+    <g transform="translate(425,100)">
+      <rect width="350" height="290" rx="14" fill="#d29922" fill-opacity="0.08" stroke="#d29922"/>
+      <circle cx="60" cy="62" r="30" fill="none" stroke="#30363d" stroke-width="8"/>
+      <circle cx="60" cy="62" r="30" fill="none" stroke="#d29922" stroke-width="8" stroke-dasharray="113 189" transform="rotate(-90 60 62)" stroke-linecap="round"/>
+      <text x="60" y="67" fill="#e6edf3" text-anchor="middle" font-weight="700" font-size="14">60%</text>
+      <text x="110" y="55" fill="#e3b341" font-weight="700" font-size="18">Drifting</text>
+      <text x="110" y="78" fill="#8b949e">long agent loops, big tool output</text>
+      <text x="24" y="132" fill="#e6edf3">• Old test logs and file dumps pile up</text>
+      <text x="24" y="158" fill="#e6edf3">• Early decisions get "lost in the middle"</text>
+      <text x="24" y="184" fill="#e6edf3">• Every turn re-sends all of it ($)</text>
+      <text x="24" y="236" fill="#e3b341" font-weight="700">/compact focus on &lt;what matters&gt;</text>
+      <text x="24" y="260" fill="#8b949e">or delegate the noisy part to a subagent.</text>
+    </g>
+    <!-- red -->
+    <g transform="translate(810,100)">
+      <rect width="350" height="290" rx="14" fill="#f85149" fill-opacity="0.08" stroke="#f85149"/>
+      <circle cx="60" cy="62" r="30" fill="none" stroke="#30363d" stroke-width="8"/>
+      <circle cx="60" cy="62" r="30" fill="none" stroke="#f85149" stroke-width="8" stroke-dasharray="170 189" transform="rotate(-90 60 62)" stroke-linecap="round"/>
+      <text x="60" y="67" fill="#e6edf3" text-anchor="middle" font-weight="700" font-size="14">90%</text>
+      <text x="110" y="55" fill="#ffa198" font-weight="700" font-size="18">Context rot</text>
+      <text x="110" y="78" fill="#8b949e">auto-compaction is near</text>
+      <text x="24" y="132" fill="#e6edf3">• Ignores instructions it followed earlier</text>
+      <text x="24" y="158" fill="#e6edf3">• Re-introduces bugs it already fixed</text>
+      <text x="24" y="184" fill="#e6edf3">• Invents files, repeats itself</text>
+      <text x="24" y="236" fill="#ffa198" font-weight="700">New session (⌘N / Ctrl+N)</text>
+      <text x="24" y="260" fill="#8b949e">Carry over only a plan.md or a summary.</text>
+    </g>
+  </g>
+</svg>

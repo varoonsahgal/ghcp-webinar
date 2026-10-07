@@ -1,0 +1,1566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Copilot Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a flight-operations manual for the course. Dark "glass cockpit" masthead, sticky chapter index on the left,
+   one reading column on the right. Each concept is an entry: term, one-line definition, explanation, then
+   optional analogy (cyan), tidbit (amber) and trap (red) boxes. Chapters follow the order of the lab. */
+:root {
+  --paper: #F2F4F2;
+  --surface: #FFFFFF;
+  --ink: #11181C;
+  --muted: #56636B;
+  --rule: #D3DAD8;
+  --code-bg: #E5EAE8;
+  --accent: #006D77;         /* avionics teal */
+  --accent-soft: #D9F1F2;
+  --accent-ink: #00424A;
+  --amber: #8A5300;          /* caution amber, for tidbits */
+  --amber-soft: #FFF0D2;
+  --go: #1B7340;
+  --go-soft: #DCF2E3;
+  --stop: #B3261E;
+  --stop-soft: #FBE2DF;
+  --deck: #0D1A1F;           /* masthead block stays dark in both themes */
+  --deck-ink: #E8F1F2;
+  --deck-muted: #9DB2B6;
+  --deck-glow: #5FE0E6;
+  --deck-amber: #F6B93B;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --s-0: 0.8125rem; --s-1: 1.0625rem; --s-2: 1.1875rem; --s-3: 1.5rem; --s-4: 2.25rem; --s-5: 3.5rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0B1316; --surface: #121D21; --ink: #E3ECEE; --muted: #97A9AE; --rule: #24343A;
+    --code-bg: #182529; --accent: #5FD3DB; --accent-soft: #0F3237; --accent-ink: #A9EEF2;
+    --amber: #F2B54A; --amber-soft: #352610; --go: #63C98E; --go-soft: #113021;
+    --stop: #F2877D; --stop-soft: #3A1714; --deck: #060C0E; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0B1316; --surface: #121D21; --ink: #E3ECEE; --muted: #97A9AE; --rule: #24343A;
+  --code-bg: #182529; --accent: #5FD3DB; --accent-soft: #0F3237; --accent-ink: #A9EEF2;
+  --amber: #F2B54A; --amber-soft: #352610; --go: #63C98E; --go-soft: #113021;
+  --stop: #F2877D; --stop-soft: #3A1714; --deck: #060C0E; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 1.25rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--f-body); font-size: var(--s-1); line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+code, kbd, pre { font-family: var(--f-mono); font-size: 0.84em; }
+code { background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--rule); border-bottom-width: 2px; background: var(--surface); padding: 0.05em 0.4em; border-radius: 4px; white-space: nowrap; }
+pre { background: var(--code-bg); padding: 0.9rem 1rem; border-radius: 6px; overflow-x: auto; line-height: 1.55; margin: 0; }
+pre code { background: none; padding: 0; overflow-wrap: normal; font-size: 1em; }
+h1, h2, h3 { text-wrap: balance; }
+strong { font-weight: 600; }
+
+/* Masthead */
+.mast { background: var(--deck); color: var(--deck-ink); padding-inline: 16px; }
+.mast-in { max-width: 1180px; margin: 0 auto; padding-block: 3rem 2.75rem; display: grid; gap: 2.5rem; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; }
+.eyebrow { font-family: var(--f-display); font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; font-size: var(--s-0); color: var(--deck-glow); }
+.mast h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(3.1rem, 8.5vw, 6rem); line-height: 0.9; letter-spacing: 0.005em; text-transform: uppercase; margin: 0.5rem 0 1.1rem; }
+.mast h1 span { color: var(--deck-glow); }
+.mast p { color: var(--deck-muted); max-width: 54ch; margin: 0; font-size: var(--s-2); line-height: 1.55; }
+.mast .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.4rem; }
+.mast .meta span { font-family: var(--f-mono); font-size: 0.75rem; color: var(--deck-ink); border: 1px solid #2B4249; border-radius: 4px; padding: 0.2rem 0.55rem; }
+
+/* MFD: a glass-cockpit display showing the nightly batch */
+.mfd { background: #071012; border: 1px solid #23383E; border-radius: 10px; box-shadow: inset 0 0 0 4px #0B1A1E, 0 18px 40px rgba(0,0,0,.45); padding: 1rem 1.1rem 1.1rem; font-family: var(--f-mono); font-size: 0.78rem; color: #CFE6E8; min-width: 0; }
+.mfd .hd { display: flex; justify-content: space-between; gap: 1rem; color: var(--deck-glow); border-bottom: 1px solid #1F3338; padding-bottom: 0.5rem; margin-bottom: 0.55rem; letter-spacing: 0.06em; }
+.mfd .hd b { font-weight: 500; }
+.mfd .row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.25rem 0.8rem; padding: 0.22rem 0; font-variant-numeric: tabular-nums; align-items: baseline; }
+.mfd .was { color: #FF8A7A; text-decoration: line-through; text-decoration-color: rgba(255,138,122,.6); }
+.mfd .now { color: #7CE6A4; }
+.mfd .lbl { color: #9DB2B6; overflow-wrap: anywhere; }
+.mfd .ft { border-top: 1px solid #1F3338; margin-top: 0.55rem; padding-top: 0.5rem; color: #8FA6AA; font-size: 0.72rem; line-height: 1.5; }
+.mfd .blink { color: var(--deck-amber); }
+
+/* Frame */
+.frame { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 2.5rem 5rem; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 3.5rem; }
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1.25rem); align-self: start; max-height: calc(100vh - 2.5rem); overflow-y: auto; font-size: 0.9375rem; padding-right: 0.5rem; }
+.toc summary { list-style: none; font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; font-size: var(--s-0); color: var(--muted); margin-bottom: 0.75rem; cursor: default; }
+.toc summary::-webkit-details-marker { display: none; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.1rem; counter-reset: ch; }
+.toc li a { display: grid; grid-template-columns: 2.1rem 1fr; padding: 0.28rem 0.5rem; border-radius: 5px; color: var(--ink); text-decoration: none; line-height: 1.35; }
+.toc li a::before { counter-increment: ch; content: counter(ch, decimal-leading-zero); font-family: var(--f-mono); font-size: 0.75rem; color: var(--muted); padding-top: 0.12rem; }
+.toc li a:hover { background: var(--code-bg); }
+.toc li a.on { background: var(--accent-soft); color: var(--accent-ink); }
+.toc li a.on::before { color: var(--accent-ink); }
+.toc .grp { font-family: var(--f-display); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.7rem; color: var(--muted); padding: 0.75rem 0.5rem 0.2rem; }
+
+main { min-width: 0; }
+.part { padding-block: 0 3.5rem; }
+.part + .part { border-top: 1px solid var(--rule); padding-top: 3rem; }
+.part-h { display: grid; gap: 0.35rem; margin-bottom: 1.75rem; }
+.part-h .eyebrow { color: var(--accent); }
+.part-h h2 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.1rem, 4.6vw, var(--s-5)); line-height: 0.98; text-transform: uppercase; letter-spacing: 0.005em; margin: 0; }
+.part-h .dek { color: var(--muted); font-size: var(--s-2); max-width: 62ch; margin: 0.5rem 0 0; line-height: 1.5; }
+
+/* Concept entries */
+.entry { display: grid; gap: 0.7rem; padding-block: 1.6rem; border-top: 1px dashed var(--rule); max-width: 74ch; }
+.part-h + .entry, .entry.first { border-top: 0; padding-top: 0.25rem; }
+.entry-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 0.75rem; }
+.entry h3 { font-family: var(--f-body); font-weight: 600; font-size: var(--s-3); line-height: 1.25; margin: 0; letter-spacing: -0.01em; }
+.chip { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--rule); border-radius: 99px; padding: 0.05rem 0.55rem; white-space: nowrap; }
+.def { font-size: var(--s-2); line-height: 1.5; margin: 0; }
+.entry p { margin: 0; }
+.entry ul, .entry ol { margin: 0; padding-left: 1.25rem; display: grid; gap: 0.3rem; }
+
+.box { padding: 0.75rem 1rem 0.8rem; border-radius: 0 6px 6px 0; display: grid; gap: 0.35rem; }
+.box > .k { font-family: var(--f-display); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.75rem; }
+.box p { margin: 0; }
+.analogy { border-left: 3px solid var(--accent); background: var(--accent-soft); }
+.analogy > .k { color: var(--accent-ink); }
+.tidbit { border-left: 3px solid var(--amber); background: var(--amber-soft); }
+.tidbit > .k { color: var(--amber); }
+.trap { border-left: 3px solid var(--stop); background: var(--stop-soft); }
+.trap > .k { color: var(--stop); }
+.try { border-left: 3px solid var(--go); background: var(--go-soft); }
+.try > .k { color: var(--go); }
+.rule-line { font-family: var(--f-display); font-weight: 700; font-size: 1.75rem; line-height: 1.08; text-transform: uppercase; letter-spacing: 0.005em; color: var(--accent); margin: 0.25rem 0; max-width: 32ch; }
+
+/* Tables */
+.tbl { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; width: 100%; font-size: 0.96rem; }
+th, td { text-align: left; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8125rem; color: var(--muted); }
+td code { white-space: nowrap; }
+.yes { color: var(--go); font-weight: 600; } .no { color: var(--stop); font-weight: 600; } .maybe { color: var(--amber); font-weight: 600; }
+
+/* Figures */
+figure { margin: 0.4rem 0 0.2rem; max-width: 74ch; }
+figure img { display: block; border-radius: 6px; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--surface); }
+figcaption { font-size: var(--s-0); color: var(--muted); margin-top: 0.5rem; line-height: 1.5; max-width: 70ch; }
+.shot img { box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.photo-row { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr); gap: 1.75rem; align-items: start; max-width: 74ch; padding-block: 1.6rem; border-top: 1px dashed var(--rule); }
+.part-h + .photo-row { border-top: 0; padding-top: 0.25rem; }
+.photo-row figure { margin: 0; }
+.photo-row .entry { border: 0; padding: 0; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; max-width: 74ch; }
+.pair figure { margin: 0; }
+.diagram { color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 1rem; overflow-x: auto; max-width: 74ch; margin: 0.4rem 0 0.2rem; }
+.diagram svg { display: block; width: 100%; height: auto; min-width: 540px; font-family: var(--f-body); }
+.diagram figcaption { margin-top: 0.75rem; }
+.d-box { fill: var(--surface); stroke: currentColor; stroke-width: 1.4; }
+.d-soft { fill: var(--code-bg); stroke: var(--rule); stroke-width: 1; }
+.d-acc { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.8; }
+.d-amb { fill: var(--amber-soft); stroke: var(--amber); stroke-width: 1.6; }
+.d-stop { fill: var(--stop-soft); stroke: var(--stop); stroke-width: 1.8; }
+.d-go { fill: var(--go-soft); stroke: var(--go); stroke-width: 1.8; }
+.d-line { stroke: currentColor; stroke-width: 1.4; fill: none; }
+.d-line-acc { stroke: var(--accent); stroke-width: 2.2; fill: none; }
+.d-line-stop { stroke: var(--stop); stroke-width: 1.6; fill: none; stroke-dasharray: 5 4; }
+.d-grid { stroke: var(--rule); stroke-width: 1; fill: none; }
+.d-t { fill: currentColor; font-size: 13px; }
+.d-tb { fill: currentColor; font-size: 13px; font-weight: 600; }
+.d-cap { fill: var(--muted); font-size: 11.5px; }
+.d-lbl { fill: var(--muted); font-size: 11.5px; font-family: var(--f-mono); }
+.d-h { fill: currentColor; font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: 0.08em; }
+.d-acc-t { fill: var(--accent-ink); font-size: 13px; font-weight: 600; }
+.d-amb-t { fill: var(--amber); font-size: 13px; font-weight: 600; }
+.d-stop-t { fill: var(--stop); font-size: 13px; font-weight: 600; }
+.d-go-t { fill: var(--go); font-size: 13px; font-weight: 600; }
+.d-head { fill: currentColor; }
+.d-head-acc { fill: var(--accent); }
+.d-head-stop { fill: var(--stop); }
+.d-fill-acc { fill: var(--accent); }
+.d-area { fill: var(--accent-soft); stroke: none; }
+
+/* Course map */
+.mods { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; max-width: 100%; }
+.mod { background: var(--surface); padding: 1rem 1.1rem 1.1rem; display: grid; gap: 0.3rem; align-content: start; }
+.mod .n { font-family: var(--f-display); font-weight: 800; font-size: 2.4rem; line-height: 1; color: var(--accent); }
+.mod .s { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.95rem; }
+.mod .t { font-family: var(--f-mono); font-size: 0.72rem; color: var(--muted); }
+.mod p { margin: 0; font-size: 0.92rem; color: var(--muted); line-height: 1.5; }
+.mod .r { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
+
+/* Ladder */
+.ladder { display: grid; gap: 0; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; max-width: 74ch; }
+.ladder > div { display: grid; grid-template-columns: 2.4rem 8.5rem minmax(0, 1fr) minmax(0, 1fr); gap: 0.9rem; padding: 0.7rem 1rem; background: var(--surface); border-top: 1px solid var(--rule); font-size: 0.95rem; align-items: baseline; }
+.ladder > div:first-child { border-top: 0; }
+.ladder .rung { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; color: var(--accent); line-height: 1; }
+.ladder b { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 1.05rem; }
+.ladder span { color: var(--muted); }
+.ladder .hdr { background: var(--code-bg); font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.78rem; color: var(--muted); }
+
+/* Bug cards */
+.bugs { display: grid; gap: 1rem; max-width: 74ch; }
+.bug { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+.bug .bh { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; align-items: baseline; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid var(--rule); }
+.bug .bh h4 { margin: 0; font-size: 1.12rem; font-weight: 600; }
+.bug .bh .out { font-family: var(--f-mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.bug .bh .out s { color: var(--stop); }
+.bug .bh .out b { color: var(--go); font-weight: 500; }
+.bug .bb { display: grid; gap: 0.6rem; padding: 0.85rem 1rem 1rem; }
+.bug .bb p { margin: 0; }
+.bug .why { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0.3rem 0.8rem; font-size: 0.96rem; }
+.bug .why dt { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.78rem; color: var(--muted); padding-top: 0.15rem; }
+.bug .why dd { margin: 0; min-width: 0; }
+
+/* Copy button on prompts */
+.prompt { position: relative; }
+.prompt pre { padding-right: 4.5rem; }
+.copy { position: absolute; top: 0.5rem; right: 0.5rem; font: 500 0.72rem var(--f-mono); color: var(--accent-ink); background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 4px; padding: 0.2rem 0.5rem; cursor: pointer; }
+.copy:hover { background: var(--surface); }
+
+/* Glossary */
+.gloss-tools { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.gloss-tools input { font: inherit; padding: 0.55rem 0.8rem; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); border-radius: 6px; width: min(100%, 22rem); }
+.gloss-tools output { color: var(--muted); font-size: var(--s-0); font-variant-numeric: tabular-nums; }
+.gloss { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); margin: 0; max-width: 82ch; }
+.gloss dt, .gloss dd { padding: 0.55rem 0; border-top: 1px solid var(--rule); margin: 0; }
+.gloss dt { font-weight: 600; padding-right: 1rem; }
+.gloss dd a { font-size: var(--s-0); white-space: nowrap; }
+.gloss-empty { color: var(--muted); }
+
+.foot { color: var(--muted); font-size: var(--s-0); border-top: 1px solid var(--rule); padding-top: 1.5rem; max-width: 82ch; }
+.foot p { margin: 0 0 0.6rem; }
+
+@media (max-width: 980px) {
+  .frame { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .toc { position: static; max-height: none; border: 1px solid var(--rule); background: var(--surface); border-radius: 8px; padding: 0.75rem 1rem; }
+  .toc summary { cursor: pointer; margin: 0; }
+  .toc summary::after { content: " ▾"; }
+  .toc[open] summary { margin-bottom: 0.6rem; }
+  .mast-in { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 680px) {
+  .mods { grid-template-columns: minmax(0, 1fr); }
+  .photo-row, .pair { grid-template-columns: minmax(0, 1fr); }
+  .ladder > div { grid-template-columns: 2rem minmax(0, 1fr); gap: 0.2rem 0.75rem; }
+  .ladder > div > span { grid-column: 2; }
+  .ladder .hdr { display: none !important; }
+  .bug .why { grid-template-columns: minmax(0, 1fr); }
+  .gloss { grid-template-columns: minmax(0, 1fr); }
+  .gloss dd { border-top: 0; padding-top: 0; }
+  .mfd .row { grid-template-columns: minmax(0, 1fr) auto; }
+  .mfd .row .was { grid-column: 2; }
+  .mfd .row .now { grid-column: 2; }
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-in">
+    <div>
+      <div class="eyebrow">Companion to the hands-on lab · GitHub Copilot in VS Code · October 2026</div>
+      <h1>Copilot <span>Field</span> Guide</h1>
+      <p>Every idea the lab touches, explained properly: what an agent really is, how much autonomy to hand it, why a full context window makes it dumber, and how to encode the controls you'd never give away. Keep it open beside the lab.</p>
+      <div class="meta"><span>VS Code 1.140+</span><span>Session Target: Local</span><span>JDK 17+ · Maven 3.9+</span><span>~2 hours</span></div>
+    </div>
+    <div class="mfd" role="img" aria-label="The Ledgerly nightly batch before and after the agent squad: installments 99.99 becomes 100.00, interest 0.0 becomes 12328.77, settlement Sunday becomes Monday, duplicate payments 3 becomes 2, and the account number is masked.">
+      <div class="hd"><b>LEDGERLY · NIGHTLY BATCH</b><b>BEFORE → AFTER</b></div>
+      <div class="row"><span class="lbl">Collected on 100.00 in 3</span><span class="was">99.99</span><span class="now">100.00</span></div>
+      <div class="row"><span class="lbl">Interest, 1M @ 5%, 90 days</span><span class="was">0.0</span><span class="now">12328.77</span></div>
+      <div class="row"><span class="lbl">Trade Thu 10-08 settles</span><span class="was">Sun 10-11</span><span class="now">Mon 10-12</span></div>
+      <div class="row"><span class="lbl">Payments after de-dup</span><span class="was">3</span><span class="now">2</span></div>
+      <div class="row"><span class="lbl">Account no. in logs</span><span class="was">…5678-9012</span><span class="now">****9012</span></div>
+      <div class="ft">All 4 unit tests were green the whole time. <span class="blink">Green tests are evidence, not a verdict.</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="frame">
+  <details class="toc" id="toc" open>
+    <summary>Chapters</summary>
+    <ol>
+      <li class="grp">Ground school</li>
+      <li><a href="#start">Start here</a></li>
+      <li><a href="#harness">Harness, agent, model</a></li>
+      <li><a href="#credits">Tokens &amp; AI Credits</a></li>
+      <li class="grp">Part 1 · Autonomy</li>
+      <li><a href="#ladder">The autonomy ladder</a></li>
+      <li><a href="#precise">Precise context</a></li>
+      <li><a href="#window">The context window</a></li>
+      <li><a href="#rot">Context rot &amp; hygiene</a></li>
+      <li><a href="#plan">Plan, checkpoints, Git</a></li>
+      <li class="grp">Part 2 · Teach your team</li>
+      <li><a href="#stack">The customization stack</a></li>
+      <li><a href="#skills">Instructions &amp; skills</a></li>
+      <li><a href="#hooks">Hooks</a></li>
+      <li class="grp">Part 3 · The squad</li>
+      <li><a href="#subagents">Agents, subagents, handoffs</a></li>
+      <li><a href="#squad">Inside the Agent Squad</a></li>
+      <li><a href="#bugs">The five Ledgerly bugs</a></li>
+      <li><a href="#logs">Prove what happened</a></li>
+      <li><a href="#surfaces">Other surfaces</a></li>
+      <li class="grp">Reference</li>
+      <li><a href="#crib">Crib sheet</a></li>
+      <li><a href="#glossary">Glossary A–Z</a></li>
+    </ol>
+  </details>
+
+<main>
+
+<!-- ============================================================ -->
+<section class="part" id="start">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 01 · Ground school</span>
+    <h2>Start here</h2>
+    <p class="dek">What you'll build, the two codebases you'll work in, and the one question every chapter keeps asking.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The one question</h3><span class="chip">Whole course</span></div>
+    <p class="def">How much control should I hand to the AI for this task, and which controls should I never hand over?</p>
+    <p>Not long ago, "using Copilot" meant typing a question into a chat box. Now Copilot can edit dozens of files, run your build, spawn helpers that work in parallel and open a pull request. Every one of those powers is optional. The skill this lab teaches is picking the right amount for each job, and writing down the rules that hold no matter how much you hand over.</p>
+    <p class="rule-line">You are the pilot in command. Copilot is the co-pilot.</p>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>The name is more apt than it looks. In aviation the <em>pilot in command</em> is legally responsible for the flight even while the first officer is flying the aircraft. Handing over the controls never hands over the responsibility. The same holds for code an agent writes on your machine and pushes under your name.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The course on one screen</h3></div>
+    <p>Each part adds a layer. Part 1 is about <em>how much</em> autonomy to give, Part 2 about making it safe and on-brand, Part 3 about running a whole team of agents.</p>
+  </div>
+  <div class="mods" role="list">
+    <div class="mod" role="listitem"><span class="n">0</span><span class="s">What's new</span><span class="t">10 min</span><p>Weekly releases, AI Credits, Auto, the Agents window, and the harness × agent × model idea.</p><span class="r">Know the controls before you fly.</span></div>
+    <div class="mod" role="listitem"><span class="n">1</span><span class="s">Choose your autonomy</span><span class="t">35 min</span><p>Build a Java weather app with Ask, Agent and Plan. Watch the context ring. Roll back with checkpoints.</p><span class="r">Pick the lowest rung that works.</span></div>
+    <div class="mod" role="listitem"><span class="n">2</span><span class="s">Teach your team</span><span class="t">30 min</span><p>Instructions, an ASCII-art skill, and hooks that block <code>rm -rf</code> and protect themselves.</p><span class="r">Suggestions vs. code that always runs.</span></div>
+    <div class="mod" role="listitem"><span class="n">3</span><span class="s">The Agent Squad</span><span class="t">35 min</span><p>One prompt, a Tech Lead and four specialists fix a legacy payments batch. Then prove it with logs.</p><span class="r">Least privilege, fresh context, verify.</span></div>
+    <div class="mod" role="listitem"><span class="n">✓</span><span class="s">Wrap-up</span><span class="t">5 min</span><p>Which tool for which job, plus three homework tasks for your real repos.</p><span class="r">Encode the controls you'd never give away.</span></div>
+    <div class="mod" role="listitem"><span class="n">☕</span><span class="s">Before class</span><span class="t">15 min, at home</span><p>VS Code 1.140+, JDK 17+, Maven 3.9+, Git, Copilot signed in. Run <code>mvn -q test</code> in <code>java-agent-squad</code> once.</p><span class="r">Java is needed from Part 1, Step 2.</span></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The two codebases</h3><span class="chip">Parts 1–3</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Project</th><th>Where it comes from</th><th>Used in</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Weather app</strong> (<code>copilotexplore</code>)</td><td>You scaffold it from nothing with <code>/new</code>. A small Java CLI, later a web view, a 5-day forecast and a °C/°F toggle. Uses <strong>wttr.in</strong>, so no API key is needed.</td><td>Part 1, Part 2</td></tr>
+        <tr><td><strong>Ledgerly Payments</strong> (<code>java-agent-squad</code>)</td><td>Provided. A deliberately buggy "legacy" Java 17 payments service from 2014, with six agents, two skills and two hook files already set up in <code>.github/</code>.</td><td>Part 2 (hooks), Part 3</td></tr>
+      </tbody>
+    </table></div>
+    <p>The weather app is where you feel the difference between autonomy levels. Ledgerly is where you watch a squad of agents do real, checkable work on code that <em>looks</em> fine: its four unit tests pass while the batch quietly loses money.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Why Java 17 or newer</h3><span class="chip">Setup</span></div>
+    <p>Ledgerly's <code>pom.xml</code> compiles with <code>&lt;maven.compiler.release&gt;17&lt;/maven.compiler.release&gt;</code>, which a JDK 11 can't do. The squad's instructions also steer agents toward Java 17 idioms such as <code>record</code>. Any JDK from 17 up works; Temurin 21 is a good default. Check in VS Code's own terminal, because it can see a different <code>JAVA_HOME</code> from your system terminal:</p>
+    <pre><code>java -version   # 17 or higher
+mvn -v          # Maven 3.9+, and its "Java version" line also 17+</code></pre>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="harness">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 02 · Ground school</span>
+    <h2>Harness, agent, model</h2>
+    <p class="dek">Three separate dials that people blur into one word, "Copilot". Keeping them apart explains most of what surprises people.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The three dials</h3><span class="chip">Part 0</span></div>
+    <p class="def">The <strong>model</strong> is the brain. The <strong>agent</strong> is the role it plays. The <strong>harness</strong> is the engine that runs the loop, applies permissions and calls tools.</p>
+    <ul>
+      <li><strong>Model:</strong> a specific model, <strong>Auto</strong> (Copilot picks per request), or <strong>HydraFusion</strong> (a research preview that mixes models for you).</li>
+      <li><strong>Agent:</strong> <em>Ask</em>, <em>Plan</em>, <em>Agent</em>, or a custom agent like the Tech Lead. An agent is a persona plus a tool list plus, optionally, a model and hooks.</li>
+      <li><strong>Harness</strong>, chosen with <strong>Session Target</strong>: <em>Local</em> (VS Code's built-in loop, used all day today), <em>Copilot</em> (the runtime shared with Copilot CLI and the Copilot app), <em>Claude</em> and <em>Codex</em> (the vendors' own harnesses), and <em>Cloud</em> (runs remotely and comes back as a PR).</li>
+    </ul>
+  </div>
+  <figure class="shot">
+    <img src="images/harness-picker.webp" width="1190" height="481" alt="The Session Target picker in the chat input listing Copilot, Local, Cloud, Claude and Codex" loading="lazy">
+    <figcaption>The Session Target picker chooses the harness. Changing the model doesn't change it. Screenshot: VS Code 1.140 release notes.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The agent loop</h3><span class="chip">Foundations</span></div>
+    <p>A model on its own only writes text. It can't open a file or run <code>mvn</code>. An agent works because the harness offers the model a menu of <strong>tools</strong> (read, search, edit, execute, start a subagent). When the model's reply is a request to use one, the harness checks the rules, runs it, and feeds the result back in. The loop repeats until the model answers in plain text.</p>
+  </div>
+  <figure class="diagram">
+    <svg viewBox="0 0 720 236" role="img" aria-label="The agent loop: you send a prompt to the harness, the harness sends the assembled context to the model, the model replies with a tool call, the harness runs hooks and approvals and then the tool, and the result goes back into the next model call.">
+      <defs>
+        <marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-head"/></marker>
+        <marker id="m1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-head-acc"/></marker>
+      </defs>
+      <rect x="14" y="90" width="118" height="56" rx="8" class="d-box"/>
+      <text x="73" y="114" text-anchor="middle" class="d-tb">You</text>
+      <text x="73" y="132" text-anchor="middle" class="d-cap">type a prompt</text>
+
+      <rect x="196" y="22" width="226" height="196" rx="10" class="d-box"/>
+      <text x="309" y="48" text-anchor="middle" class="d-h">HARNESS · LOCAL</text>
+      <text x="309" y="70" text-anchor="middle" class="d-cap">assembles context every turn</text>
+      <text x="309" y="87" text-anchor="middle" class="d-cap">loops until the model stops</text>
+      <rect x="220" y="104" width="178" height="40" rx="7" class="d-amb"/>
+      <text x="309" y="129" text-anchor="middle" class="d-amb-t">hooks · PreToolUse</text>
+      <rect x="220" y="154" width="178" height="44" rx="7" class="d-acc"/>
+      <text x="309" y="173" text-anchor="middle" class="d-acc-t">approvals</text>
+      <text x="309" y="189" text-anchor="middle" class="d-lbl">default · bypass · autopilot</text>
+
+      <rect x="506" y="22" width="198" height="66" rx="8" class="d-box"/>
+      <text x="605" y="49" text-anchor="middle" class="d-h">MODEL</text>
+      <text x="605" y="70" text-anchor="middle" class="d-cap">writes text or a tool call</text>
+
+      <rect x="506" y="150" width="198" height="66" rx="8" class="d-box"/>
+      <text x="605" y="177" text-anchor="middle" class="d-h">TOOLS</text>
+      <text x="605" y="198" text-anchor="middle" class="d-lbl">read · edit · execute · agent</text>
+
+      <line x1="132" y1="118" x2="192" y2="118" class="d-line" marker-end="url(#m1)"/>
+      <line x1="422" y1="42" x2="502" y2="42" class="d-line" marker-end="url(#m1)"/>
+      <text x="462" y="35" text-anchor="middle" class="d-lbl">context</text>
+      <line x1="504" y1="72" x2="426" y2="72" class="d-line" marker-end="url(#m1)"/>
+      <text x="465" y="90" text-anchor="middle" class="d-lbl">tool call</text>
+      <line x1="398" y1="168" x2="502" y2="168" class="d-line-acc" marker-end="url(#m1a)"/>
+      <text x="452" y="160" text-anchor="middle" class="d-lbl">if allowed</text>
+      <line x1="504" y1="204" x2="426" y2="204" class="d-line" marker-end="url(#m1)"/>
+      <text x="465" y="222" text-anchor="middle" class="d-lbl">result</text>
+    </svg>
+    <figcaption>The model never touches your disk. Every action is a request the harness can check, log, ask you about, or block. That checkpoint in the middle is where Part 2's hooks live.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Why the harness matters</h3><span class="chip">Part 0 · Part 2</span></div>
+    <p>Hooks, tool names and some customization features are <strong>harness-specific</strong>. A hook written for Local uses events like <code>PreToolUse</code> and fields like <code>tool_name</code>; the Copilot harness and Copilot CLI read the same <code>.github/hooks/*.json</code> files but have their own event list (<code>agentStop</code>, <code>errorOccurred</code>…). That is why the lab pins <strong>Session Target → Local</strong>.</p>
+    <div class="box analogy"><span class="k">Analogy</span><p>The model is a brilliant contractor who can only talk. The harness is the site office: it hands out the tools, keeps the sign-in sheet, and enforces site rules. The agent is the job title on the badge. Swap the contractor and the site rules stay the same. Move to a different site office and the rules change, even with the same contractor.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The Agents window</h3><span class="chip">Part 0 · Part 3</span></div>
+    <p class="def">A separate VS Code window built for <em>assigning and reviewing</em> agent work across many sessions, rather than chatting in one.</p>
+    <p>Open it with <strong>Open in Agents</strong> in the title bar or <code>code --agents</code>. It adds worktrees, Dev Containers, <strong>Automations</strong> (scheduled prompts), a <strong>Changes</strong> panel, <strong>Create PR</strong> and the experimental <strong>Agent merge</strong>. Sessions are shared with the normal Chat view, so you can start in one and finish in the other.</p>
+  </div>
+  <figure class="shot">
+    <img src="images/agents-window.png" width="1938" height="1099" alt="The Agents window with its sessions list, customizations panel, chat area, changes panel and files panel, each annotated" loading="lazy">
+    <figcaption>The Agents window: sessions on the left, the conversation in the middle, the diff and files on the right. Screenshot: VS Code docs.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Weekly releases</h3><span class="chip">Part 0</span></div>
+    <p>VS Code now ships every week (1.136 to 1.140 all landed in September 2026). Screens in any guide, including this one, drift quickly. Update on the morning of class with <em>Help → Check for Updates</em>, and when a menu doesn't match, search the Command Palette (<kbd>⇧⌘P</kbd> / <kbd>Ctrl+Shift+P</kbd>) for the command name.</p>
+    <div class="box tidbit"><span class="k">Tidbit</span><p><strong>Edit mode</strong> was deprecated, then removed in 1.126 (June 2026). It isn't gone so much as absorbed: Ask, Plan and Agent are themselves just custom agents with different tool lists. If you want a "constrained editor", you write one.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="credits">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 03 · Ground school</span>
+    <h2>Tokens &amp; AI Credits</h2>
+    <p class="dek">Since June 1, 2026 you pay for what the model reads and writes, not for how many times you press Enter. That changes which habits are cheap.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/taxi-meter.jpg" width="1100" height="825" alt="A taxi meter on a car dashboard in Japan showing a fare of 1940 yen" loading="lazy">
+      <figcaption>A taxi meter in Japan. Photo: Wikimedia Commons, public domain.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Tokens</h3><span class="chip">Part 0</span></div>
+      <p class="def">Models read and write in tokens, chunks of text roughly ¾ of an English word long. Under GitHub AI Credits, each model has its own price per token.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>The old premium-request model was a bus ticket: one fare per ride, however far you went. AI Credits is a taxi meter: it runs for the whole trip, and every detour shows up on the fare. A 40-step agent loop that rereads the same five files is a long detour.</p></div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>What actually drives cost</h3><span class="chip">Part 0 · Part 1</span></div>
+    <ul>
+      <li><strong>The whole context is re-sent every turn.</strong> In a 30-turn agent loop, the instructions and file contents from turn 1 are paid for again on turns 2 to 30. Prompt caching makes repeats cheaper, not free.</li>
+      <li><strong>Tool results pile up.</strong> Test logs, file reads and terminal output usually outweigh everything you typed.</li>
+      <li><strong>Every enabled tool costs tokens on every turn.</strong> Tool definitions are part of the fixed overhead, so an unused MCP server with 40 tools isn't free.</li>
+      <li><strong>Subagents multiply.</strong> Each one has its own context and its own bill. They are worth it when they keep noise out of the main thread, not by default.</li>
+    </ul>
+  </div>
+  <div class="pair">
+    <figure class="shot"><img src="images/session-cost.webp" width="500" height="372" alt="The session info popup showing Session Cost 14.6 credits and context window usage" loading="lazy"><figcaption>Click the context ring to see <strong>Session Cost</strong>.</figcaption></figure>
+    <figure class="shot"><img src="images/auto-optimize.webp" width="620" height="407" alt="The Auto model Optimize for menu with Efficiency, Balance and Intelligence options" loading="lazy"><figcaption><strong>Auto → Optimize for</strong>: Efficiency, Balance, Intelligence. Screenshots: VS Code release notes.</figcaption></figure>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The levers you control</h3><span class="chip">Part 0</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Lever</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Use Auto</strong></td><td>Auto is 10% cheaper than choosing the same model directly. Set <em>Optimize for → Efficiency</em> for routine work.</td></tr>
+        <tr><td><strong>Lower rung</strong></td><td>An Ask turn that answers in one shot uses a fraction of an Agent turn's tokens. See Chapter 04.</td></tr>
+        <tr><td><strong>Smaller context</strong></td><td><code>#file</code> instead of "look at everything", <code>/compact</code>, a new session per task.</td></tr>
+        <tr><td><strong>Cheaper workers</strong></td><td>Give read-only recon subagents a small, fast model with <code>model:</code> in their agent file.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box trap"><span class="k">Trap</span><p>The old "use a 0x model" trick is gone. Nothing is free per prompt any more, so "just let Agent figure it out" now has a visible price. Check <strong>Session Cost</strong> after each lab step and compare.</p></div>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>"Taxi" is short for <em>taximeter cab</em>. The taximeter (from Greek <em>taxa</em>, charge) was invented in Germany in 1891, decades before the cars it ended up in. Metered billing is old; it's just new to your IDE.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="ladder">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 04 · Part 1</span>
+    <h2>The autonomy ladder</h2>
+    <p class="dek">Ask, Plan, Agent, Autopilot, a squad, the cloud. Each rung buys speed with tokens and trust. Choosing the lowest rung that gets the job done is the skill.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/learner-car.jpg" width="825" height="1100" alt="A small red learner car with an L plate parked beside a park" loading="lazy">
+      <figcaption>An L plate: the driver is capable but supervised. Photo: TudorTulok, Wikimedia Commons, CC0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Autonomy is a dial, not a switch</h3><span class="chip">Part 1</span></div>
+      <p class="def">Each rung gives the AI more freedom to act without asking you, and needs more guardrails to be safe.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>Ask is a passenger giving directions. Agent is a learner driver: they hold the wheel, you sit beside them with your own brake and approve each turn onto a main road. Autopilot is letting them drive alone. Nobody hands the keys over on day one, and nobody hands them over on an icy night without good brakes fitted. Hooks and checkpoints are those brakes.</p></div>
+      <div class="box tidbit"><span class="k">Tidbit</span><p>Self-driving cars use the same idea. The SAE J3016 standard defines six levels, from 0 (no automation) to 5 (drives anywhere, no human needed). Most cars on the road today sit at level 2: the car steers and brakes, the human watches all the time.</p></div>
+    </div>
+  </div>
+
+  <div class="ladder" role="table" aria-label="The autonomy ladder">
+    <div class="hdr" role="row"><span role="columnheader">#</span><span role="columnheader">Rung</span><span role="columnheader">What it does</span><span role="columnheader">Use it when</span></div>
+    <div role="row"><span class="rung" role="cell">1</span><b role="cell">Ask</b><span role="cell">Read-only tools. One bounded answer. Nothing loops.</span><span role="cell">Explaining, exploring, a one-shot answer or a scaffold to preview.</span></div>
+    <div role="row"><span class="rung" role="cell">2</span><b role="cell">Plan</b><span role="cell">Researches the codebase, asks clarifying questions, writes <code>plan.md</code>.</span><span role="cell">The change is risky or you aren't sure what you want yet.</span></div>
+    <div role="row"><span class="rung" role="cell">3</span><b role="cell">Agent</b><span role="cell">Edits files, runs commands, reads errors, fixes its own mistakes. You approve tools.</span><span role="cell">Multi-step work you can verify, for example with a build or tests.</span></div>
+    <div role="row"><span class="rung" role="cell">4</span><b role="cell">Autopilot</b><span role="cell">Agent with tool approvals switched off. Keeps going until done.</span><span role="cell">Hooks and checkpoints have your back, and your org allows it.</span></div>
+    <div role="row"><span class="rung" role="cell">5</span><b role="cell">Agent squad</b><span role="cell">A coordinator plus specialists, each with least privilege, some in parallel.</span><span role="cell">A big task with separable parts and a clear finish line.</span></div>
+    <div role="row"><span class="rung" role="cell">6</span><b role="cell">Cloud / scheduled</b><span role="cell">Runs on GitHub's machines or on a timer, and returns a PR.</span><span role="cell">Well-specified chores you'll review as a PR anyway.</span></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Ask is "just" a custom agent</h3><span class="chip">Part 1 · Step 1</span></div>
+    <p>Hover <strong>Ask</strong> in the agents dropdown and open its definition (or type <code>/agents</code>). It literally introduces itself as an agent ("You are an ASK AGENT…") and has only read-only tools. The built-in agents are examples of the same file format you'll use for the Tech Lead in Part 3.</p>
+    <p><code>/new</code> in Ask scaffolds a whole project from a sentence and shows you a preview first. One bounded pass: it proposes, you accept or not. Nothing self-corrects. That's the point of the lowest rung.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Is Agent overkill?</h3><span class="chip">Part 1 · Discussion</span></div>
+    <p>An Agent turn can run 10 to 40 tool calls, rereading files and test output each time. An Ask turn that answers in one go uses a fraction of that. Under token billing, Ask with good context is often <em>genuinely cheaper</em>, not just "fewer prompts". Reach for Agent when the work needs doing, not just knowing.</p>
+    <p class="rule-line">More autonomy is not always better.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Approvals and the risk assessment</h3><span class="chip">Part 1 · Step 3</span></div>
+    <p>With <strong>Default Approvals</strong>, Agent asks before running terminal commands, and each request comes with an <strong>AI risk assessment</strong> that says what the command does in plain words ("executes remote code"). Read it. It's a second opinion, not a guarantee.</p>
+  </div>
+  <figure class="shot">
+    <img src="images/terminal-risk.webp" width="1288" height="284" alt="A terminal command confirmation with an AI-generated risk explanation" loading="lazy">
+    <figcaption>A terminal approval with its risk note. Screenshot: VS Code 1.120 release notes.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Steer vs. queue</h3><span class="chip">Part 1 · Step 4</span></div>
+    <p class="def">While an agent is working you can type a follow-up and choose how it lands.</p>
+    <ul>
+      <li><strong>Steer</strong> injects your message into the run that's happening now. Use it to correct course ("make Celsius the default").</li>
+      <li><strong>Queue</strong> waits until the current turn finishes, then sends. Use it for the next task.</li>
+      <li><strong>Stop and send</strong> cancels the run and starts fresh with your message.</li>
+    </ul>
+    <div class="box analogy"><span class="k">Analogy</span><p>Steering is the navigator saying "next left, not right" while you're still driving. Queueing is adding a stop to the trip. Stopping is pulling over.</p></div>
+  </div>
+  <figure class="shot">
+    <img src="images/send-dropdown.png" width="749" height="249" alt="The Send button dropdown with options to queue, steer, or stop and send" loading="lazy">
+    <figcaption>The Send dropdown. Screenshot: VS Code docs.</figcaption>
+  </figure>
+  <div class="entry">
+    <div class="box tidbit"><span class="k">Tidbit</span><p>The lab calls Agent "a fast junior engineer". A 2025 METR study is a useful reality check: 16 experienced open-source developers were measured as 19% <em>slower</em> on real tasks when allowed AI tools, while they believed they had been about 20% faster. Agents can feel productive without being productive. Measure, don't assume. That's what Part 3's logs are for.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="precise">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 05 · Part 1</span>
+    <h2>Precise context</h2>
+    <p class="dek">Before you reach for a bigger agent or a bigger model, give the one you have better information.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Context items: the # menu</h3><span class="chip">Part 1 · Step 2</span></div>
+    <p class="def">Typing <code>#</code> in chat lets you attach exactly the information the model needs, instead of hoping it goes looking for it.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Item</th><th>What it attaches</th></tr></thead>
+      <tbody>
+        <tr><td><code>#terminalSelection</code></td><td>The exact text you highlighted in the terminal, such as a stack trace.</td></tr>
+        <tr><td><code>#problems</code></td><td>The compiler and linter errors from the Problems panel.</td></tr>
+        <tr><td><code>#changes</code></td><td>Your uncommitted Git changes.</td></tr>
+        <tr><td><code>#&lt;file&gt;</code>, <code>#&lt;symbol&gt;</code></td><td>One file, or one class or method.</td></tr>
+        <tr><td>A GitHub issue or PR URL</td><td>The issue or PR, pasted straight in.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box analogy"><span class="k">Analogy</span><p>Telling a doctor "it hurts somewhere" gets you a long examination. Pointing to the spot and handing over the X-ray gets you a diagnosis. <code>#terminalSelection</code> is the X-ray.</p></div>
+    <p class="rule-line">Ask plus great context beats Agent plus vague context.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Inline chat</h3><span class="chip">Part 1 · Step 2</span></div>
+    <p>Select some code and press <kbd>⌘I</kbd> / <kbd>Ctrl+I</kbd>. The suggestion appears in place, as a diff you accept or discard. It's the smallest and cheapest context there is: the selection, the file, and your one sentence. Perfect for a one-spot fix.</p>
+  </div>
+  <figure class="shot">
+    <img src="images/inline-chat.png" width="1528" height="502" alt="Editor inline chat suggesting a non-recursive factorial implementation in place" loading="lazy">
+    <figcaption>Inline chat rewriting a function where it sits. Screenshot: VS Code docs.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="window">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 06 · Part 1</span>
+    <h2>The context window</h2>
+    <p class="dek">The model has no memory between calls. Everything it "knows" right now is whatever the harness packed into this one request.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Context and the context window</h3><span class="chip">Part 1 · Step 5</span></div>
+    <p class="def">The context is everything the model sees on a turn. The context window is the most it can hold at once, measured in tokens.</p>
+    <p>A fresh chat "doesn't know" what you discussed in another chat, and a subagent doesn't know what its parent discussed with you, for the same reason: neither was in the context. If something must survive, it has to be written down somewhere that gets loaded, such as an instructions file, a skill or a plan file.</p>
+    <div class="box analogy"><span class="k">Analogy</span><p>The context window is a desk, not a filing cabinet. A bigger desk lets you spread out more papers, but you still read them one glance at a time. Pile on enough old drafts and stack traces and you start working from the wrong page.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The ring</h3><span class="chip">Part 1 · Step 5</span></div>
+    <p>The small ring with a percentage at the bottom-right of the chat input is the <strong>context window control</strong>. Hover or click it.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>In the popup</th><th>What it tells you</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Session Cost</strong></td><td>AI Credits spent in this session so far.</td></tr>
+        <tr><td><strong>Context Window</strong></td><td>How much of the window <em>this request</em> uses, for example <code>26.1K / 1M</code>. The shaded part is reserved for the reply.</td></tr>
+        <tr><td><strong>System</strong></td><td>Instructions and tool definitions. Fixed overhead on every turn.</td></tr>
+        <tr><td><strong>User Context</strong></td><td>Messages and tool results. The part that grows. In agent loops, tool results usually dominate.</td></tr>
+        <tr><td><strong>Compact Conversation</strong></td><td>Summarizes older history to free space.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="pair">
+    <figure class="shot"><img src="images/context-ring.png" width="600" height="415" alt="The context window popup with Session Cost, usage 26.1K of 1M tokens, a category breakdown and a Compact Conversation button" loading="lazy"><figcaption>The ring's popup. Screenshot: VS Code docs.</figcaption></figure>
+    <figure class="shot"><img src="images/context-assembly.png" width="2520" height="1260" alt="Diagram of the six layers that make up the prompt: system instructions, custom instructions, conversation history, implicit context, explicit references and tool outputs" loading="lazy"><figcaption>What goes into each request, all re-sent every turn. Diagram: VS Code docs.</figcaption></figure>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The six layers</h3><span class="chip">Part 1 · Step 5</span></div>
+    <ol>
+      <li><strong>System instructions</strong>: the agent's own prompt and tool definitions.</li>
+      <li><strong>Custom instructions</strong>: <code>copilot-instructions.md</code> and matching <code>*.instructions.md</code> files, plus skill descriptions.</li>
+      <li><strong>Conversation history</strong>: everything said so far, or a summary of it after compaction.</li>
+      <li><strong>Implicit context</strong>: the open file, your selection, current errors, Git state.</li>
+      <li><strong>Explicit references</strong>: what you attached with <code>#</code>.</li>
+      <li><strong>Tool outputs</strong>: file reads, search results, terminal output, test logs.</li>
+    </ol>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>Psychologist George Miller's 1956 paper "The Magical Number Seven, Plus or Minus Two" argued that human working memory holds only a handful of items at once. Models can hold vastly more, but they share our weakness for losing track of what's in the middle. That's the next chapter.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="rot">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 07 · Part 1</span>
+    <h2>Context rot &amp; hygiene</h2>
+    <p class="dek">A 1M-token window is capacity, not a target. Quality drops as the window fills, long before it's full.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Context rot</h3><span class="chip">Part 1 · Step 5</span></div>
+    <p class="def">The measurable drop in a model's quality as its input grows, even on simple tasks.</p>
+    <p>In Chroma's 2025 study of 18 frontier models, every model did worse as input length increased. Three things drive it:</p>
+    <ul>
+      <li><strong>Lost in the middle.</strong> Models use information at the start and end of the context better than information buried in the middle. In a long session, your early instructions <em>are</em> the middle.</li>
+      <li><strong>Distractors.</strong> Similar-but-wrong content, such as an old stack trace or the previous version of a file, actively misleads.</li>
+      <li><strong>Weaker reasoning.</strong> Even when the model can find the right fact, it reasons over it less well in a long input.</li>
+    </ul>
+  </div>
+  <figure class="shot">
+    <img src="images/context-rot-chart.png" width="1189" height="790" alt="Chroma chart: on a repeated-words task, scores for Claude Sonnet 4, GPT-4.1, Qwen3-32B and Gemini 2.5 Flash fall from near 1.0 toward 0.5 as input length grows" loading="lazy">
+    <figcaption>Performance falls with input length on a trivially simple task. Source: Chroma, <em>Context Rot</em> (2025), github.com/chroma-core/context-rot.</figcaption>
+  </figure>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 270" role="img" aria-label="A schematic U-shaped curve: how well a model uses a fact is highest when the fact is at the start or end of the context and lowest in the middle. Labels mark your first instructions at the start, the latest messages at the end, and the middle as where early rules end up in a long session.">
+      <text x="40" y="26" class="d-h">LOST IN THE MIDDLE · SCHEMATIC</text>
+      <line x1="80" y1="50" x2="80" y2="210" class="d-grid"/>
+      <line x1="80" y1="210" x2="690" y2="210" class="d-line"/>
+      <line x1="80" y1="90" x2="690" y2="90" class="d-grid"/>
+      <line x1="80" y1="150" x2="690" y2="150" class="d-grid"/>
+      <path d="M90 70 C 200 70, 230 180, 385 182 S 580 120, 680 64 L680 210 L90 210 Z" class="d-area"/>
+      <path d="M90 70 C 200 70, 230 180, 385 182 S 580 120, 680 64" class="d-line-acc"/>
+      <circle cx="90" cy="70" r="5" class="d-fill-acc"/>
+      <circle cx="385" cy="182" r="5" class="d-fill-acc"/>
+      <circle cx="680" cy="64" r="5" class="d-fill-acc"/>
+      <text x="72" y="74" text-anchor="end" class="d-cap">used well</text>
+      <text x="72" y="196" text-anchor="end" class="d-cap">missed</text>
+      <text x="96" y="232" class="d-lbl">start of context</text>
+      <text x="385" y="232" text-anchor="middle" class="d-lbl">middle</text>
+      <text x="680" y="232" text-anchor="end" class="d-lbl">end (latest turn)</text>
+      <text x="108" y="58" class="d-tb">your first instructions</text>
+      <text x="385" y="168" text-anchor="middle" class="d-stop-t">where early rules drift to</text>
+      <text x="672" y="52" text-anchor="end" class="d-tb">your latest message</text>
+      <text x="40" y="258" class="d-cap">Position of a fact in the context →  (shape after Liu et al., "Lost in the Middle", 2023; not to scale)</text>
+    </svg>
+    <figcaption>The U-shaped curve. As a session grows, the rule you gave in message three slides toward the bottom of the U.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>What rot looks like in Copilot</h3><span class="chip">Part 1 · Step 5</span></div>
+    <ul>
+      <li>It forgets a rule it followed an hour ago.</li>
+      <li>It reintroduces a bug it already fixed.</li>
+      <li>It rereads the same files.</li>
+      <li>It contradicts its own plan.</li>
+      <li>It invents a file or method name.</li>
+    </ul>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>Humans show the same U. In memory experiments from the 1960s, people recalled the first words of a list (the <em>primacy effect</em>) and the last words (the <em>recency effect</em>) far better than the middle. It's called the serial-position effect. "Lost in the middle" is the model version of it.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Reading the ring</h3><span class="chip">Rule of thumb</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Ring</th><th>State</th><th>Move</th></tr></thead>
+      <tbody>
+        <tr><td><span class="yes">under ~40%</span></td><td>Focused</td><td>Keep going.</td></tr>
+        <tr><td><span class="maybe">around 60%</span></td><td>Drifting</td><td><code>/compact</code> with a focus, or push noisy work into a subagent.</td></tr>
+        <tr><td><span class="no">around 90%</span></td><td>Rot</td><td>New session. Carry over a plan file or a five-line summary, not the chat.</td></tr>
+      </tbody>
+    </table></div>
+    <p>These thresholds are a rule of thumb, not an official limit. Watch the <em>behavior</em> above, not just the number. VS Code also auto-compacts near the limit.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The hygiene toolkit</h3><span class="chip">Part 1 · Step 5</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Move</th><th>When</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Precise context</strong></td><td>Always</td><td><code>#file</code>, <code>#symbol</code>, <code>#terminalSelection</code></td></tr>
+        <tr><td><strong>Compact</strong></td><td>Filling up, task not done</td><td><code>/compact focus on the forecast decisions</code></td></tr>
+        <tr><td><strong>New session</strong></td><td>New task, or rot symptoms</td><td><kbd>⌘N</kbd> / <kbd>Ctrl+N</kbd>, carry over a summary</td></tr>
+        <tr><td><strong>Fork</strong></td><td>Try an alternative safely</td><td><code>/fork</code>, or <strong>Fork Conversation</strong> on a checkpoint</td></tr>
+        <tr><td><strong>Side chat</strong></td><td>Quick question about a reply</td><td>Select text in a response → <strong>Ask Question</strong> (Agents window)</td></tr>
+        <tr><td><strong>Subagent</strong></td><td>Noisy research, logs, review</td><td>Work happens in its own context; only the summary returns</td></tr>
+        <tr><td><strong>Instructions</strong></td><td>A rule that must survive</td><td><code>copilot-instructions.md</code> or a skill, never message #3</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box analogy"><span class="k">Analogy</span><p><code>/compact</code> is tidying the desk by replacing a stack of papers with a one-page summary. A subagent is sending an intern to the archive: they read 40 files in another room and come back with one page. Your desk never sees the 40 files.</p></div>
+    <div class="box try"><span class="k">Try it</span><p>Run <code>/compact keep only the decisions about units and the forecast API</code>, then ask <code>What did we decide about the default temperature unit, and why?</code> If the summary dropped it, that decision belonged in <code>copilot-instructions.md</code> all along.</p></div>
+  </div>
+  <figure class="shot">
+    <img src="images/side-chat.png" width="1807" height="1130" alt="Selecting text in an agent response shows an Ask Question button that opens a side chat" loading="lazy">
+    <figcaption>Side chat: ask about a response without growing the main context. Screenshot: VS Code docs.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="plan">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 08 · Part 1</span>
+    <h2>Plan, checkpoints, Git</h2>
+    <p class="dek">Think before you build, and know exactly which undo button covers what.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Plan</h3><span class="chip">Part 1 · Step 6</span></div>
+    <p class="def">An agent that researches the codebase, asks clarifying questions, and writes a step-by-step plan before any code changes.</p>
+    <p>Run <code>/plan …</code>. It asks things like "hourly granularity, or every three hours?" and "which API endpoint?". The result is stored in session memory as <code>plan.md</code> (<em>Chat: Show Memory Files</em>). Then you choose <strong>Implement</strong> (normal approvals) or <strong>Start with Autopilot</strong>.</p>
+    <p>A plan file is <strong>externalized memory</strong>. It survives compaction and new sessions, because it's a file, not a chat message. That makes it the best thing to carry into a fresh session when the old one starts rotting.</p>
+    <div class="box analogy"><span class="k">Analogy</span><p>Measure twice, cut once. Plan is the measuring. It costs a few minutes and saves you from an agent confidently building the wrong thing across twelve files.</p></div>
+    <div class="box trap"><span class="k">Trap</span><p>Approving a plan is not approving tool actions. Autopilot auto-approves edits <em>and</em> terminal commands. Use it only where hooks and checkpoints have your back. Your org can switch it off.</p></div>
+  </div>
+  <figure class="shot">
+    <img src="images/context-eng-workflow.png" width="880" height="834" alt="Context engineering workflow: project docs are curated into project context, which with task context produces a plan file, which with coding guidelines produces code" loading="lazy" style="max-width:440px">
+    <figcaption>Docs → plan → code. Diagram: VS Code context engineering guide.</figcaption>
+  </figure>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/quickdraw.jpg" width="733" height="1100" alt="A quickdraw clipped to a bolt on a grey limestone climbing wall" loading="lazy">
+      <figcaption>A quickdraw clipped to a bolt. Photo: Cristian Bortes, Wikimedia Commons, CC BY 2.0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Checkpoints</h3><span class="chip">Part 1 · Step 7</span></div>
+      <p class="def">Automatic snapshots of your workspace files and chat history at each request, so you can roll back what the agent changed.</p>
+      <p>Hover a request and choose <strong>Restore Checkpoint</strong>. Changed your mind? <strong>Redo</strong>. You can also <strong>Fork Conversation</strong> from any checkpoint to try another approach.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>A lead climber clips the rope into a bolt every few metres. If they fall, they only drop back to the last clip, not to the ground. Checkpoints are those clips. But a clip can't catch a rock you already knocked down onto someone below.</p></div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>What a checkpoint can't undo</h3><span class="chip">Part 1 · Step 7</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Action</th><th>Checkpoint</th><th>Git</th></tr></thead>
+      <tbody>
+        <tr><td>Files the agent edited</td><td class="yes">Restores</td><td class="yes">If committed</td></tr>
+        <tr><td>Chat history</td><td class="yes">Restores</td><td class="no">No</td></tr>
+        <tr><td>Terminal commands (deleted files, installs, DB changes)</td><td class="no">No</td><td class="maybe">Only tracked files</td></tr>
+        <tr><td>Network calls, deployments</td><td class="no">No</td><td class="no">No</td></tr>
+        <tr><td>Pushed commits</td><td class="no">No</td><td class="maybe">Revert, visibly</td></tr>
+      </tbody>
+    </table></div>
+    <p class="rule-line">Checkpoints are short-term AI undo. Git is long-term history.</p>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>In July 2025 a widely reported incident saw an AI coding agent on Replit delete a company's production database during an explicit code freeze, then give a misleading account of what it had done. No editor undo button reaches a production database. That's exactly the kind of action Part 2's hooks exist to block before it happens.</p></div>
+  </div>
+  <figure class="shot">
+    <img src="images/restore-checkpoint.png" width="679" height="624" alt="The Restore Checkpoint action on a chat request" loading="lazy" style="max-width:420px">
+    <figcaption>Restore Checkpoint on a chat request. Screenshot: VS Code docs.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="stack">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 09 · Part 2</span>
+    <h2>The customization stack</h2>
+    <p class="dek">Five ways to teach Copilot how your team works. They differ in one crucial way: when they load, and whether the model can ignore them.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>What goes where</h3><span class="chip">Part 2</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Type</th><th>File</th><th>Loaded when</th><th>Can the model ignore it?</th><th>Like…</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Instructions</strong></td><td><code>.github/copilot-instructions.md</code></td><td>Every request</td><td class="maybe">Yes, sometimes</td><td>The team handbook</td></tr>
+        <tr><td><strong>Skills</strong></td><td><code>.github/skills/&lt;name&gt;/SKILL.md</code></td><td>When the task matches the description</td><td class="maybe">Yes, sometimes</td><td>A reference book on the shelf</td></tr>
+        <tr><td><strong>Custom agents</strong></td><td><code>.github/agents/*.agent.md</code></td><td>When selected or called as a subagent</td><td class="no">Tool limits: no</td><td>A job description with a badge</td></tr>
+        <tr><td><strong>Hooks</strong></td><td><code>.github/hooks/*.json</code></td><td>At lifecycle events</td><td class="no">No</td><td>A turnstile</td></tr>
+        <tr><td><strong>MCP servers</strong></td><td><code>.vscode/mcp.json</code></td><td>Tools available every turn</td><td>—</td><td>A power tool on the wall</td></tr>
+      </tbody>
+    </table></div>
+    <p>Instructions and skills are <strong>suggestions</strong> the model usually follows. An agent's tool list and hooks are <strong>enforced by the harness</strong>: a Bug Hunter without the <code>edit</code> tool can't edit, however much it wants to, and a hook that denies <code>git push</code> wins every argument.</p>
+  </div>
+  <figure class="shot">
+    <img src="images/customizations-editor.png" width="1910" height="631" alt="The Agent Customizations editor with categories in the sidebar and custom agents in the main view" loading="lazy">
+    <figcaption>Everything in one place: <em>Configure Chat (gear) → Agent Customizations</em>, or <code>/agents</code>, <code>/skills</code>, <code>/hooks</code>, <code>/instructions</code>. Screenshot: VS Code docs.</figcaption>
+  </figure>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 250" role="img" aria-label="Defense in depth: five layers in a row. Instructions and skills suggest, custom-agent tool limits and hooks enforce, and tests plus human review verify. A risky action has to get through every layer.">
+      <defs><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head-stop"/></marker></defs>
+      <text x="20" y="26" class="d-h">DEFENSE IN DEPTH · EACH LAYER CATCHES WHAT THE LAST MISSED</text>
+      <rect x="20"  y="56" width="122" height="120" rx="8" class="d-amb"/>
+      <rect x="160" y="56" width="122" height="120" rx="8" class="d-amb"/>
+      <rect x="300" y="56" width="122" height="120" rx="8" class="d-acc"/>
+      <rect x="440" y="56" width="122" height="120" rx="8" class="d-acc"/>
+      <rect x="580" y="56" width="122" height="120" rx="8" class="d-go"/>
+      <text x="81"  y="98" text-anchor="middle" class="d-amb-t">Instructions</text>
+      <text x="221" y="98" text-anchor="middle" class="d-amb-t">Skills</text>
+      <text x="361" y="98" text-anchor="middle" class="d-acc-t">Agent tools</text>
+      <text x="501" y="98" text-anchor="middle" class="d-acc-t">Hooks</text>
+      <text x="641" y="98" text-anchor="middle" class="d-go-t">Tests + review</text>
+      <text x="81"  y="122" text-anchor="middle" class="d-cap">always loaded</text>
+      <text x="221" y="122" text-anchor="middle" class="d-cap">loaded on match</text>
+      <text x="361" y="122" text-anchor="middle" class="d-cap">can't call what</text>
+      <text x="361" y="137" text-anchor="middle" class="d-cap">it doesn't have</text>
+      <text x="501" y="122" text-anchor="middle" class="d-cap">code that blocks</text>
+      <text x="641" y="122" text-anchor="middle" class="d-cap">quality gate,</text>
+      <text x="641" y="137" text-anchor="middle" class="d-cap">Code Reviewer, you</text>
+      <text x="152" y="204" text-anchor="middle" class="d-lbl">SUGGEST</text>
+      <line x1="24" y1="192" x2="280" y2="192" class="d-grid"/>
+      <text x="432" y="204" text-anchor="middle" class="d-lbl">ENFORCE</text>
+      <line x1="300" y1="192" x2="562" y2="192" class="d-grid"/>
+      <text x="641" y="204" text-anchor="middle" class="d-lbl">VERIFY</text>
+      <line x1="580" y1="192" x2="702" y2="192" class="d-grid"/>
+      <path d="M10 236 L 470 236" class="d-line-stop" marker-end="url(#m2)"/>
+      <text x="478" y="240" class="d-stop-t">rm -rf, git push: stopped here</text>
+    </svg>
+    <figcaption>No single layer is perfect. Stack them so the holes don't line up, the idea behind James Reason's "Swiss cheese model" of accident prevention (1990).</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="skills">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 10 · Part 2</span>
+    <h2>Instructions &amp; skills</h2>
+    <p class="dek">Always-on rules for everything, and on-demand know-how for some things.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Always-on instructions</h3><span class="chip">Part 2.1</span></div>
+    <p class="def"><code>.github/copilot-instructions.md</code> is added to every request in the workspace.</p>
+    <p><code>/init</code> inspects your project and writes a first draft with build commands and conventions. Then edit it and add one rule your team really cares about, for example <em>"Use java.time, never java.util.Date."</em> Check it was used by expanding <strong>References</strong> under any reply.</p>
+    <p>Keep it <strong>short</strong>. Every line is paid for on every turn and competes for the model's attention. Ledgerly's says, among other things, "money is <code>BigDecimal</code>" and "do not add new dependencies".</p>
+    <div class="box analogy"><span class="k">Analogy</span><p>Instructions are the one-page "how we work here" sheet taped next to every desk. Useful precisely because it's one page. Nobody reads a taped-up 40-page handbook.</p></div>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/card-catalog.jpg" width="1100" height="733" alt="An open library card catalog drawer full of index cards on a wooden table" loading="lazy">
+      <figcaption>A card catalog drawer. Photo: Michael Holley, Wikimedia Commons, public domain.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Agent Skills</h3><span class="chip">Part 2.2</span></div>
+      <p class="def">A folder with a <code>SKILL.md</code> and optional scripts and references. Copilot sees only its name and description until a task matches.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>A library doesn't pile every book on your desk. It gives you a card catalog: a short card per book. You flip through the cards, and only fetch the book whose card matches what you need. Then you only open the appendix if the chapter sends you there. A skill's description is its catalog card.</p></div>
+    </div>
+  </div>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 230" role="img" aria-label="Progressive disclosure in three levels. Level 1, always loaded: the name and description of every skill. Level 2, loaded when a task matches: the body of that SKILL.md. Level 3, loaded only if needed: files in references or scripts.">
+      <text x="20" y="26" class="d-h">PROGRESSIVE DISCLOSURE · PAY FOR KNOW-HOW ONLY WHEN YOU USE IT</text>
+      <rect x="20" y="48" width="680" height="46" rx="8" class="d-acc"/>
+      <text x="36" y="70" class="d-acc-t">1 · Name + description</text>
+      <text x="36" y="86" class="d-lbl">every skill, every turn</text>
+      <text x="684" y="76" text-anchor="end" class="d-lbl">ascii-weather-art: "Renders weather as ASCII art… Use when…"</text>
+      <rect x="20" y="106" width="500" height="46" rx="8" class="d-box"/>
+      <text x="36" y="128" class="d-tb">2 · SKILL.md body</text>
+      <text x="36" y="144" class="d-lbl">only when the task matches</text>
+      <text x="504" y="134" text-anchor="end" class="d-lbl">"Map the condition… use the 5-line art…"</text>
+      <rect x="20" y="164" width="320" height="46" rx="8" class="d-soft"/>
+      <text x="36" y="186" class="d-tb">3 · references/, scripts/</text>
+      <text x="36" y="202" class="d-lbl">only if the body says so</text>
+      <text x="356" y="192" class="d-cap">art.md, find-money-smells.sh</text>
+    </svg>
+    <figcaption>Lots of know-how, very little context cost. The width of each bar stands for how often it's in the context.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The description is the trigger</h3><span class="chip">Part 2.2</span></div>
+    <p>Copilot decides whether to load a skill from its description alone, so write it like a search result that says <em>what</em> and <em>when</em>:</p>
+    <pre><code>name: ascii-weather-art
+description: Renders weather conditions as colorful ASCII-art banners in Java
+  console output. Use when asked to make the CLI/console output prettier, more
+  readable, or more fun, or when printing current weather or forecasts.</code></pre>
+    <ul>
+      <li>Say what it does in the first clause, and when to use it after "Use when…".</li>
+      <li>Use the words people actually type ("prettier", "console output"), not internal jargon.</li>
+      <li>Every skill is also a slash command: <code>/ascii-weather-art add a STORM test case</code>.</li>
+      <li>Same folder works in VS Code, Copilot CLI and the GitHub Copilot app. Personal skills live in <code>~/.copilot/skills/</code>.</li>
+    </ul>
+    <div class="box try"><span class="k">Try it</span><p><code>/create-skill a skill that explains our team's Maven multi-module conventions</code>. Then write a prompt that <em>should</em> trigger it without naming it, and check <strong>References</strong>.</p></div>
+    <div class="box tidbit"><span class="k">Tidbit</span><p><em>Progressive disclosure</em> is an old user-interface design principle: show the essentials first and reveal detail on request, like an "Advanced settings" button. Skills apply it to an AI's attention instead of a human's.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="hooks">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 11 · Part 2</span>
+    <h2>Hooks</h2>
+    <p class="dek">Instructions are requests. Hooks are code that runs every time, at fixed points, and can say no.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/turnstile.jpg" width="1100" height="733" alt="A row of subway turnstiles at the 86 Street station in New York" loading="lazy">
+      <figcaption>Turnstiles at 86 St, New York. Photo: Fabio Sola Penna, Wikimedia Commons, CC BY 2.0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Hooks</h3><span class="chip">Part 2.3</span></div>
+      <p class="def">Commands the harness runs at lifecycle events. They see the event as JSON, and they can log it, add context, or block the action.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>A sign saying "please pay your fare" is an instruction. A turnstile is a hook. It doesn't care how persuasive you are, how urgent your train is, or that you've "already paid in a previous message". No valid ticket, no entry.</p></div>
+    </div>
+  </div>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 250" role="img" aria-label="Hook lifecycle along one session: SessionStart, UserPromptSubmit, then a loop of PreToolUse, the tool, and PostToolUse, with SubagentStart and SubagentStop, PreCompact, and finally Stop. PreToolUse can block with exit code 2, and Stop can send the agent back to work.">
+      <defs>
+        <marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head"/></marker>
+        <marker id="m3s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head-stop"/></marker>
+      </defs>
+      <text x="20" y="26" class="d-h">WHERE YOU CAN PLUG IN · LOCAL HARNESS EVENTS</text>
+      <line x1="20" y1="100" x2="700" y2="100" class="d-line" marker-end="url(#m3)"/>
+      <rect x="20" y="78" width="104" height="44" rx="7" class="d-box"/><text x="72" y="105" text-anchor="middle" class="d-tb">SessionStart</text>
+      <rect x="136" y="78" width="132" height="44" rx="7" class="d-box"/><text x="202" y="105" text-anchor="middle" class="d-tb">UserPromptSubmit</text>
+      <rect x="282" y="78" width="104" height="44" rx="7" class="d-stop"/><text x="334" y="105" text-anchor="middle" class="d-stop-t">PreToolUse</text>
+      <rect x="398" y="78" width="72" height="44" rx="7" class="d-soft"/><text x="434" y="105" text-anchor="middle" class="d-t">tool</text>
+      <rect x="482" y="78" width="110" height="44" rx="7" class="d-box"/><text x="537" y="105" text-anchor="middle" class="d-tb">PostToolUse</text>
+      <rect x="606" y="78" width="80" height="44" rx="7" class="d-go"/><text x="646" y="105" text-anchor="middle" class="d-go-t">Stop</text>
+      <path d="M537 124 C 537 160, 334 160, 334 126" class="d-line" marker-end="url(#m3)"/>
+      <text x="436" y="168" text-anchor="middle" class="d-lbl">loops per tool call</text>
+      <text x="72" y="62" text-anchor="middle" class="d-cap">inject context</text>
+      <text x="202" y="62" text-anchor="middle" class="d-cap">log the prompt</text>
+      <text x="334" y="62" text-anchor="middle" class="d-stop-t">block · exit 2</text>
+      <text x="537" y="62" text-anchor="middle" class="d-cap">audit, compile</text>
+      <text x="646" y="62" text-anchor="middle" class="d-go-t">"not done yet"</text>
+      <rect x="140" y="194" width="210" height="36" rx="7" class="d-soft"/><text x="245" y="217" text-anchor="middle" class="d-t">SubagentStart / SubagentStop</text>
+      <rect x="370" y="194" width="120" height="36" rx="7" class="d-soft"/><text x="430" y="217" text-anchor="middle" class="d-t">PreCompact</text>
+      <text x="508" y="216" class="d-cap">also available</text>
+    </svg>
+    <figcaption>The model decides what to do; hooks decide what's allowed and what happens around it. The event arrives on stdin as JSON; the decision goes back on stdout or as an exit code.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>How a guardrail hook works</h3><span class="chip">Part 2.3</span></div>
+    <p>The hook file is only a pointer. All the logic lives in the script:</p>
+    <pre><code>{
+  "hooks": {
+    "PreToolUse": [{
+      "type": "command",
+      "command": "bash .github/hooks/scripts/guardrails.sh",
+      "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\guardrails.ps1",
+      "timeout": 10
+    }]
+  }
+}</code></pre>
+    <ol>
+      <li>The harness pipes the pending tool call to the script as JSON on <strong>stdin</strong>: <code>tool_name</code>, <code>tool_input</code>, and so on.</li>
+      <li>The script checks it against its rules: <code>rm -rf</code>, <code>git push</code>, deploys, edits to <code>.github/hooks</code>.</li>
+      <li>To block, it prints a <code>deny</code> decision with a reason and <strong>exits with code 2</strong>. Exit 2 means "block, and tell the model why". The model reads the reason and adapts, usually to <code>mvn clean</code> instead of <code>rm -rf target</code>.</li>
+    </ol>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>Agents can't edit their own guardrails because the guardrail script also blocks edits to <code>.github/hooks</code>. It protects itself. That's the difference between a rule and a lock: you can argue with a rule.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The class hooks</h3><span class="chip">Part 2.3 · Part 3</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>File</th><th>Events</th><th>Does</th></tr></thead>
+      <tbody>
+        <tr><td><code>audit.json</code></td><td>All</td><td>Writes <code>timeline.log</code> (human-readable) and <code>audit.jsonl</code> (one JSON line per event). Injects branch, JDK version and a guardrail warning at SessionStart.</td></tr>
+        <tr><td><code>guardrails.json</code></td><td>PreToolUse</td><td>Blocks <code>rm -rf</code>, <code>git push</code>, deploys and edits to the hooks folder.</td></tr>
+        <tr><td><code>quality-gate.*</code></td><td>Stop (Tech Lead only)</td><td>Runs <code>mvn test</code>. If it's red, tells the agent it isn't done.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box try"><span class="k">Try it</span><p>Tail the timeline in a second terminal (<code>tail -f .github/hooks/logs/timeline.log</code>), then ask: <code>The build is messy. Run rm -rf target and rebuild.</code> Watch for <code>⛔ BLOCKED</code>. Then try to talk the agent into deleting the guardrail.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Hooks are code with your permissions</h3><span class="chip">Security</span></div>
+    <div class="box trap"><span class="k">Trap</span><p>A hook runs whatever its script says, as you. A malicious repo could ship a hook that uploads your SSH keys. Review hook scripts before trusting a workspace, exactly as you'd review a build script. Workspace hooks only run in <strong>trusted</strong> workspaces, and your org can restrict which hooks run.</p></div>
+    <p>Debug them in the <strong>Output</strong> panel under <em>GitHub Copilot Chat Hooks</em>, and list discovered hook files with <em>Chat: Configure Hooks</em> or <code>/hooks</code>. Always test a hook in the harness you'll run it in.</p>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>On August 1, 2012, Knight Capital lost about $440 million in 45 minutes after a deployment left old trading code active on one of its servers. A rule that says "agents never deploy" is cheap. A hook that enforces it is cheaper than finding out the hard way.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="subagents">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 12 · Part 3</span>
+    <h2>Agents, subagents, handoffs</h2>
+    <p class="dek">Three ways to involve more than one agent. They differ in who starts them, what they can see, and who's in control.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Side by side</h3><span class="chip">Part 3.1</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Custom agent</th><th>Subagent</th><th>Handoff</th></tr></thead>
+      <tbody>
+        <tr><td><strong>What</strong></td><td>A role you pick: persona, tools, model, hooks</td><td>A temporary worker another agent launches</td><td>A button that switches to the next agent with a pre-filled prompt</td></tr>
+        <tr><td><strong>Started by</strong></td><td>You, from the dropdown</td><td>The model, with the <code>agent</code> tool</td><td>You, with a click</td></tr>
+        <tr><td><strong>Sees</strong></td><td>The conversation</td><td><strong>Only its task.</strong> Returns a summary.</td><td>The conversation, carried over</td></tr>
+        <tr><td><strong>Why</strong></td><td>Specialized behavior</td><td>Parallelism and a clean coordinator context</td><td>A human checkpoint between stages</td></tr>
+        <tr><td><strong>In Ledgerly</strong></td><td>Tech Lead, Code Reviewer</td><td>Bug Hunter, Security Auditor, Java Modernizer, Test Engineer</td><td>"🔍 Independent code review", "📝 Draft the pull request"</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/pit-stop.jpg" width="1100" height="578" alt="A Formula 1 pit crew in white helmets practising a pit stop around a car" loading="lazy">
+      <figcaption>A Williams pit crew practising. Photo: pedrik, Wikimedia Commons, CC BY 2.0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Subagents</h3><span class="chip">Part 3.2</span></div>
+      <p class="def">A worker agent that gets a fresh context, does one job, and returns only its result to the agent that started it.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>A Formula 1 pit stop takes under three seconds because about 20 people work in parallel, each with exactly one job: one wheel gun, one jack, one tyre. The race engineer doesn't change tyres. They get a radio message: "done, all four". That's a coordinator with subagents.</p></div>
+    </div>
+  </div>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 260" role="img" aria-label="Context isolation: the Tech Lead's context window holds the prompt, the plan and three short summary tables. Each of three subagents has its own context window full of file reads and search results. Only a short summary travels back to the Tech Lead.">
+      <defs><marker id="m4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head-acc"/></marker></defs>
+      <text x="20" y="26" class="d-h">WHY SUBAGENTS SCALE · THE NOISE STAYS IN THEIR WINDOW</text>
+      <rect x="20" y="48" width="230" height="190" rx="10" class="d-acc"/>
+      <text x="135" y="72" text-anchor="middle" class="d-acc-t">Tech Lead's context</text>
+      <rect x="40" y="86" width="190" height="24" rx="4" class="d-box"/><text x="52" y="103" class="d-t">your prompt + plan</text>
+      <rect x="40" y="118" width="190" height="20" rx="4" class="d-box"/><text x="52" y="133" class="d-lbl">bug table · 20 lines</text>
+      <rect x="40" y="144" width="190" height="20" rx="4" class="d-box"/><text x="52" y="159" class="d-lbl">security table · 12 lines</text>
+      <rect x="40" y="170" width="190" height="20" rx="4" class="d-box"/><text x="52" y="185" class="d-lbl">modernize table · 15 lines</text>
+      <text x="135" y="222" text-anchor="middle" class="d-cap">ring stays low</text>
+      <g>
+        <rect x="430" y="48" width="270" height="56" rx="8" class="d-soft"/>
+        <text x="444" y="70" class="d-tb">Bug Hunter</text>
+        <text x="444" y="90" class="d-lbl">14 file reads · 6 searches · skill</text>
+        <rect x="430" y="114" width="270" height="56" rx="8" class="d-soft"/>
+        <text x="444" y="136" class="d-tb">Security Auditor</text>
+        <text x="444" y="156" class="d-lbl">11 file reads · grep for secrets</text>
+        <rect x="430" y="180" width="270" height="56" rx="8" class="d-soft"/>
+        <text x="444" y="202" class="d-tb">Java Modernizer</text>
+        <text x="444" y="222" class="d-lbl">12 file reads · API scan</text>
+      </g>
+      <line x1="426" y1="76" x2="254" y2="128" class="d-line-acc" marker-end="url(#m4)"/>
+      <line x1="426" y1="142" x2="254" y2="154" class="d-line-acc" marker-end="url(#m4)"/>
+      <line x1="426" y1="208" x2="254" y2="180" class="d-line-acc" marker-end="url(#m4)"/>
+      <text x="340" y="96" text-anchor="middle" class="d-lbl">summary only</text>
+    </svg>
+    <figcaption>Compaction <em>summarizes</em> what's already in your window. A subagent keeps the noisy work <em>out of it</em> entirely. The file-read counts are illustrative.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Way 1: ad hoc, from the chat box</h3><span class="chip">Part 3.2</span></div>
+    <p>Any agent with the <code>agent</code> tool (the built-in Agent has it) starts subagents when you ask. Each one shows up as a collapsed tool call; click it to see the exact prompt the parent wrote, its tool calls and its result.</p>
+    <div class="prompt"><pre><code>Use three subagents in parallel to review src/main/java without editing anything:
+one for calculation bugs, one for security issues, one for missing test coverage.
+Then merge their findings into one table sorted by severity.</code></pre></div>
+    <div class="box trap"><span class="k">Trap</span><p>A subagent <strong>doesn't inherit your conversation</strong>. "Look into rounding" gets a vague answer. Write the task like a ticket: the goal, what it may touch, and what to return. "Do not change files. Return a table of file:line and the rounding technique used."</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Way 2: declared in agent files</h3><span class="chip">Part 3.2</span></div>
+    <p>When a workflow is worth repeating, encode it. A coordinator and a worker are two <code>.agent.md</code> files:</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Frontmatter</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>tools: ['agent', …]</code></td><td>Lets this agent start subagents at all.</td></tr>
+        <tr><td><code>agents: [...]</code></td><td>Allow-list of which agents it may start. <code>['*']</code> any, <code>[]</code> none. Names are case-sensitive.</td></tr>
+        <tr><td><code>user-invocable: false</code></td><td>Hidden from the dropdown, still callable as a subagent. For workers.</td></tr>
+        <tr><td><code>disable-model-invocation: true</code></td><td>The reverse: humans can pick it, other agents can't call it. For the Code Reviewer.</td></tr>
+        <tr><td><code>model:</code></td><td>Per-agent model. Cheap and fast for recon, strong for the lead, a different family for review.</td></tr>
+        <tr><td><code>hooks:</code>, <code>handoffs:</code></td><td>Agent-scoped hooks (Local only) and the buttons shown when it finishes.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Subagents can start their own subagents only if <code>chat.subagents.allowInvocationsFromSubagents</code> is on (off by default, up to five levels). Keep chains shallow: each level is another context you can't see and another bill.</p>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>Anthropic's 2025 write-up of its multi-agent research system reported that a lead agent with parallel subagents beat a single agent by about 90% on its internal research benchmark, and used roughly 15 times the tokens of a normal chat. Parallel agents buy speed and breadth, and you pay for both.</p></div>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/relay-baton.jpg" width="1100" height="733" alt="Two runners passing a relay baton on a red athletics track" loading="lazy">
+      <figcaption>A baton exchange. Photo: Irish Defence Forces, Wikimedia Commons, CC BY 2.0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Handoffs</h3><span class="chip">Part 3.6</span></div>
+      <p class="def">Buttons under an agent's final reply that switch to the next agent, carrying the conversation and a pre-filled prompt.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>In a relay, the baton has to change hands inside a 30-metre exchange zone. Pass it outside the zone and the team is disqualified, however fast the runners. A handoff is a deliberate exchange zone: the work only moves to the next stage when a human clicks the button.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="squad">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 13 · Part 3</span>
+    <h2>Inside the Agent Squad</h2>
+    <p class="dek">One prompt, "Get the nightly batch audit-ready", and six agents with carefully limited powers.</p>
+  </div>
+
+  <figure>
+    <img src="images/squad-architecture.svg" width="1200" height="640" alt="Squad architecture: you prompt the Tech Lead; it runs Bug Hunter, Security Auditor and Java Modernizer in parallel; the Test Engineer writes failing tests; the Tech Lead fixes the code; a Stop hook loops it back if tests are red; handoff buttons start the Code Reviewer or draft a PR" loading="lazy">
+    <figcaption>The squad from the lab handout.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The crew</h3><span class="chip">Part 3.3</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Agent</th><th>Kind</th><th>Tools</th><th>Job</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Tech Lead</strong></td><td>Coordinator</td><td><code>agent</code> read search edit execute todos</td><td>Runs the phases, fixes production code. Has the quality-gate Stop hook.</td></tr>
+        <tr><td><strong>Bug Hunter</strong></td><td>Subagent</td><td>read search</td><td>Functional and money-calculation bugs, as a table.</td></tr>
+        <tr><td><strong>Security Auditor</strong></td><td>Subagent</td><td>read search</td><td>Secrets, PII in logs, unsafe patterns.</td></tr>
+        <tr><td><strong>Java Modernizer</strong></td><td>Subagent</td><td>read search</td><td>Legacy APIs and the Java 17 idioms that prevent the bugs.</td></tr>
+        <tr><td><strong>Test Engineer</strong></td><td>Subagent</td><td>read search edit execute</td><td>Writes failing tests first. Its prompt limits it to <code>src/test</code>.</td></tr>
+        <tr><td><strong>Code Reviewer</strong></td><td>Human-only</td><td>read search execute</td><td>Independent review via handoff. Can't be called by the Tech Lead.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Least privilege</h3><span class="chip">Part 3.3</span></div>
+    <p class="def">Give every agent the smallest set of tools that lets it do its job, and nothing more.</p>
+    <p>The recon workers only get <code>read</code> and <code>search</code>. They <em>can't</em> edit, even if a confusing file or a prompt injection tells them to. Only the Test Engineer and the Tech Lead have <code>edit</code>, and the Tech Lead alone is meant to touch production code. If one agent goes wrong, the damage is limited to what it was allowed to do.</p>
+    <div class="box trap"><span class="k">Look closely</span><p>The Test Engineer's "tests only" rule lives in its prompt, not its tool list: it has <code>edit</code> like the Tech Lead. That's a suggestion, not a lock. To enforce it, add a PreToolUse hook that denies edits outside <code>src/test</code>. Spotting gaps like this is the point of reading agent files.</p></div>
+    <div class="box analogy"><span class="k">Analogy</span><p>A hotel key card opens your room, the gym and the lift to your floor. Not the other rooms, not the safe. If you lose it, the hotel's exposure is one room. An agent with every tool is a master key.</p></div>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>The principle was written down by Jerome Saltzer and Michael Schroeder in 1975, in "The Protection of Information in Computer Systems": every program and user should operate with the least set of privileges necessary to complete the job. It's 50 years old and it fits agents perfectly.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The run, phase by phase</h3><span class="chip">Part 3.4</span></div>
+    <ol>
+      <li><strong>Recon, in parallel.</strong> The Tech Lead launches Bug Hunter, Security Auditor and Java Modernizer in one step. The timeline shows three <code>🤖 ┌ subagent START</code> lines within a second or two. Each has a credit-usage pill.</li>
+      <li><strong>Skills load.</strong> Expand a subagent: you'll see <code>money-handling</code> read and <code>find-money-smells.sh</code> run.</li>
+      <li><strong>Red first.</strong> The Test Engineer writes tests that <em>fail for the right reason</em> and runs <code>mvn -q test</code>.</li>
+      <li><strong>Green.</strong> The Tech Lead fixes the production code.</li>
+      <li><strong>Quality gate.</strong> If it tries to finish while tests are red, the Stop hook says no: <code>🔁 quality gate RED</code>, and it keeps working.</li>
+      <li><strong>Handoff.</strong> Two buttons: independent review, or draft the PR.</li>
+    </ol>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/checklist.jpg" width="1100" height="732" alt="A pilot in a dark cockpit reading a checklist under a red light" loading="lazy">
+      <figcaption>Running the checklist. Photo: US Air Force, Wikimedia Commons, public domain.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>The quality gate</h3><span class="chip">Part 3.4</span></div>
+      <p class="def">A Stop hook that runs <code>mvn test</code> when the Tech Lead tries to finish, and sends it back to work if anything is red.</p>
+      <p>The model decides when it <em>thinks</em> it's done. The hook decides when it <em>is</em> done. That's a definition of done the model can't talk its way past.</p>
+      <div class="box tidbit"><span class="k">Tidbit</span><p>The pilot's checklist was born from a crash. In 1935 Boeing's Model 299 prototype went down on a test flight because the crew forgot to release a control lock. The plane wasn't "too much airplane to fly"; it was too much to remember. The fix was a short checklist, and the aircraft became the B-17. A Stop hook is a checklist the agent can't skip.</p></div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Test-driven: red, then green</h3><span class="chip">Part 3.4</span></div>
+    <p>Writing the failing test first proves two things the final green run can't: that the bug is real, and that the test would catch it if it came back. A test written after the fix might pass for the wrong reason. Kent Beck popularized this as <em>red, green, refactor</em> in <em>Test-Driven Development: By Example</em> (2002).</p>
+    <div class="box trap"><span class="k">Trap</span><p>Ledgerly's original four tests all pass. They test the happy path, not the money. "Tests are green" only tells you the tests you wrote agree with the code you wrote.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>An independent reviewer</h3><span class="chip">Part 3.6</span></div>
+    <p>The Code Reviewer has <code>disable-model-invocation: true</code>, so the Tech Lead can't call it as a subagent. It isn't marking its own homework. For a truly independent opinion, pin it to a <em>different model family</em> with <code>model:</code>.</p>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>Researchers (Panickssery, Bowman and Feng, 2024) found that language models used as judges can recognize their own writing and tend to rate it higher. Reviewing with a different model family is a cheap way around that bias.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="bugs">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 14 · Part 3</span>
+    <h2>The five Ledgerly bugs</h2>
+    <p class="dek">Every one of them compiles, passes the original tests, and would make a banking auditor wince. Here's what's actually going on.</p>
+  </div>
+
+  <div class="bugs">
+    <article class="bug">
+      <div class="bh"><h4>1 · The vanishing penny</h4><span class="out"><s>99.99</s> → <b>100.00</b></span></div>
+      <div class="bb">
+        <dl class="why">
+          <dt>Code</dt><dd><code>InstallmentPlanner</code> rounds 100 ÷ 3 to <code>33.33</code> and repeats it three times.</dd>
+          <dt>Why</dt><dd>Rounding each part separately loses the remainder. Three × 33.33 is 99.99.</dd>
+          <dt>Fix</dt><dd>A lossless split: <code>BigDecimal</code>, round each part, give the leftover cent(s) to the last installment (33.33, 33.33, 33.34).</dd>
+        </dl>
+        <div class="box tidbit"><span class="k">Tidbit</span><p>In 1982 the Vancouver Stock Exchange launched an index at 1,000. Its software <em>truncated</em> the value to three decimals thousands of times a day, and 22 months later the index read about 520 while the market had risen. Recalculated properly, it was about 1,098. Tiny rounding errors compound.</p></div>
+      </div>
+    </article>
+
+    <article class="bug">
+      <div class="bh"><h4>2 · The interest that wasn't</h4><span class="out"><s>0.0</s> → <b>12328.77</b></span></div>
+      <div class="bb">
+        <dl class="why">
+          <dt>Code</dt><dd><code>principal * (rate / 100) * (days / 365)</code>, with <code>days</code> an <code>int</code>.</dd>
+          <dt>Why</dt><dd>Integer division: <code>90 / 365</code> is <code>0</code> in Java, so the whole product is zero. 1,000,000 × 5% × 90/365 should be 12,328.77.</dd>
+          <dt>Fix</dt><dd><code>BigDecimal</code> arithmetic, divide last, with an explicit scale and <code>RoundingMode</code>.</dd>
+        </dl>
+        <div class="box tidbit"><span class="k">Tidbit</span><p>Never build a <code>BigDecimal</code> from a <code>double</code>. <code>new BigDecimal(0.1)</code> is exactly <code>0.1000000000000000055511151231257827021181583404541015625</code>, because 0.1 can't be stored exactly in binary. Use <code>new BigDecimal("0.1")</code> or <code>BigDecimal.valueOf(0.1)</code>.</p></div>
+      </div>
+    </article>
+
+    <article class="bug">
+      <div class="bh"><h4>3 · Settling on a Sunday</h4><span class="out"><s>Sun 2026-10-11</s> → <b>Mon 2026-10-12</b></span></div>
+      <div class="bb">
+        <dl class="why">
+          <dt>Code</dt><dd>Adds two <em>calendar</em> days to Thursday (Saturday), then bumps Saturday by one day (Sunday).</dd>
+          <dt>Why</dt><dd>T+2 means two <em>business</em> days. Thursday + 2 business days is Monday. The code also uses the legacy <code>Date</code>, <code>Calendar</code> and a shared static <code>SimpleDateFormat</code>, which isn't thread-safe.</dd>
+          <dt>Fix</dt><dd><code>java.time.LocalDate</code>, skipping Saturday and Sunday one day at a time (and, in real life, bank holidays).</dd>
+        </dl>
+        <div class="box tidbit"><span class="k">Tidbit</span><p>US equities moved from T+2 to <strong>T+1</strong> settlement on May 28, 2024. Settlement rules change, which is one more reason to keep them in one well-tested place.</p></div>
+      </div>
+    </article>
+
+    <article class="bug">
+      <div class="bh"><h4>4 · Charged twice</h4><span class="out"><s>3</s> → <b>2</b></span></div>
+      <div class="bb">
+        <dl class="why">
+          <dt>Code</dt><dd><code>Payment</code> overrides <code>equals()</code> by id but not <code>hashCode()</code>. The de-duplicator puts payments in a <code>HashSet</code>.</dd>
+          <dt>Why</dt><dd>A <code>HashSet</code> checks <code>hashCode()</code> first. Two "equal" payments with different hash codes land in different buckets and are never compared, so the duplicate survives.</dd>
+          <dt>Fix</dt><dd>Override <code>hashCode()</code> consistently, or make <code>Payment</code> a Java 17 <code>record</code>, which generates both correctly. (A record compares <em>all</em> fields, so decide what "same payment" means first.)</dd>
+        </dl>
+        <div class="box tidbit"><span class="k">Tidbit</span><p>"Always override hashCode when you override equals" is a rule in Joshua Bloch's <em>Effective Java</em>. In payments the deeper fix is an <strong>idempotency key</strong>: the gateway sends a unique id per payment attempt, and you refuse to process the same key twice.</p></div>
+      </div>
+    </article>
+
+    <article class="bug">
+      <div class="bh"><h4>5 · Secrets in the logs</h4><span class="out"><s>4400-1234-5678-9012</s> → <b>****9012</b></span></div>
+      <div class="bb">
+        <dl class="why">
+          <dt>Code</dt><dd><code>FxConverter</code> hard-codes an API key ("move to the vault before go-live", ticket opened 2019) and prints it, with the full account number, on every conversion. Money is a <code>double</code>.</dd>
+          <dt>Why</dt><dd>Logs get shipped, indexed and kept for years by people who shouldn't see secrets or full account numbers.</dd>
+          <dt>Fix</dt><dd>Read the key from the environment or a vault, never log it, and mask account numbers to the last four digits.</dd>
+        </dl>
+        <div class="box tidbit"><span class="k">Tidbit</span><p>Card-industry rules (PCI DSS) cap what you may display of a card number at the first six and last four digits. Showing only the last four, as Ledgerly's fix does, is the common safe default.</p></div>
+      </div>
+    </article>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Money is BigDecimal</h3><span class="chip">money-handling skill</span></div>
+    <p>Three of the five bugs come from treating money as a <code>double</code>. The squad's <code>money-handling</code> skill writes down the rules: <code>BigDecimal</code> built from strings, an explicit scale, <code>RoundingMode.HALF_EVEN</code>, lossless splits, and currency kept next to the amount (<code>record Money(BigDecimal amount, Currency currency)</code>).</p>
+    <div class="box tidbit"><span class="k">Tidbit</span><p><code>HALF_EVEN</code> is "banker's rounding": a value exactly halfway rounds to the nearest <em>even</em> digit (2.5 → 2, 3.5 → 4). Always rounding halves up adds a tiny upward bias across millions of transactions; rounding to even cancels it out on average. It's also the default rounding mode in the IEEE 754 floating-point standard.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="logs">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 15 · Part 3</span>
+    <h2>Prove what happened</h2>
+    <p class="dek">"It worked" is a claim. Logs are the evidence. Four lenses on the same run.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/flight-recorder.jpg" width="600" height="450" alt="A bright orange flight data recorder labelled in French: enregistreur de vol, ne pas ouvrir" loading="lazy">
+      <figcaption>A flight data recorder: "flight recorder, do not open". Photo: NTSB, Wikimedia Commons, public domain.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Trust, but verify</h3><span class="chip">Part 3.5</span></div>
+      <p class="def">Every agent run leaves a trail you can inspect: what it read, what it ran, which skills loaded, how many tokens each step cost.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>Every airliner carries a flight data recorder. Nobody reads it on a good day, but when something goes wrong it's the only thing that can say what really happened, not what the crew remembers. Agent logs are your flight recorder. Read them even when the run "worked".</p></div>
+      <div class="box tidbit"><span class="k">Tidbit</span><p>"Black boxes" are painted bright orange so they're easy to find in wreckage.</p></div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>① Agent Debug Logs</h3><span class="chip">Part 3.5</span></div>
+    <p>In the Chat view use <strong>… → Show Agent Debug Logs</strong>, or run <em>Developer: Open Agent Debug Logs</em>. It lists every tool call, model request, skill and instruction discovery, and hook run. The <strong>Agent Flow Chart</strong> draws the coordinator fanning out to subagents, with tokens and seconds per step. The <strong>Summary</strong> totals tool calls, tokens, errors and duration.</p>
+    <div class="box trap"><span class="k">Empty panel?</span><p>Agent Debug Logs are experimental and must be switched on, and they only capture from that moment. Ledgerly's <code>.vscode/settings.json</code> does it for you. Elsewhere: Settings (<kbd>⌘,</kbd> / <kbd>Ctrl+,</kbd>), search <code>agentDebugLog</code>. If it doesn't show up (a current UI bug), open <strong>Settings (JSON)</strong> and add <code>"github.copilot.chat.agentDebugLog.fileLogging.enabled": true</code>, reload the window, and run again.</p></div>
+  </div>
+  <div class="pair">
+    <figure class="shot"><img src="images/agent-flow-chart.png" width="1600" height="900" alt="The Agent Flow Chart showing model calls and tool calls as connected nodes with token counts and timings" loading="lazy"><figcaption>Agent Flow Chart.</figcaption></figure>
+    <figure class="shot"><img src="images/agent-logs-summary.png" width="1808" height="1130" alt="The Summary view with tool calls, tokens, errors and duration" loading="lazy"><figcaption>Summary. Screenshots: VS Code docs.</figcaption></figure>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>② Ask the logs</h3><span class="chip">Part 3.5</span></div>
+    <div class="prompt"><pre><code>/troubleshoot Which subagents ran in parallel, how many tokens did each use, and did the Bug Hunter load the money-handling skill?</code></pre></div>
+    <p>The <strong>Chat Debug view</strong> (<code>/debug</code>) shows the raw prompt: find your skills list, instructions and the SessionStart context in it.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>③ Your own audit trail · ④ Git</h3><span class="chip">Part 3.5</span></div>
+    <pre><code>cat .github/hooks/logs/timeline.log
+jq -r 'select(.event=="PreToolUse") | .payload.tool_name' \
+   .github/hooks/logs/audit.jsonl | sort | uniq -c | sort -rn
+git diff demo-start --stat</code></pre>
+    <p>The hook logs are yours: they don't depend on any experimental setting, and you control what's in them. Git is the final word on what changed.</p>
+    <div class="box trap"><span class="k">Trap</span><p>Debug logs contain prompts, source code, file paths and possibly secrets. Review them before you share them, for example in a bug report.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="surfaces">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 16 · Part 3</span>
+    <h2>Other surfaces</h2>
+    <p class="dek">The same <code>.github/agents</code>, <code>skills</code> and <code>hooks</code> folders travel. What runs them changes.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Copilot CLI</h3><span class="chip">Part 3.7 · Bonus</span></div>
+    <pre><code>copilot          # start in this folder
+/agent           # pick Tech Lead
+/fleet           # let the CLI fan out parallel subagents itself
+/tasks           # watch running subagents and shell commands
+/usage           # tokens and credits
+/share           # export the session to Markdown or a gist
+copilot --log-level debug --log-dir ./copilot-logs</code></pre>
+    <p>The CLI uses the Copilot harness, so hook events and payloads differ from Local. Treat it as an experiment until you've tested your hooks there.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Worktrees and Cloud</h3><span class="chip">Part 3.7 · Bonus</span></div>
+    <ul>
+      <li><strong>Agents window → New session → Worktree</strong> runs the squad in a separate folder on its own branch, so your working copy stays untouched. Review the diff in <strong>Changes</strong>, then <strong>Create PR</strong>.</li>
+      <li><strong>Cloud</strong> (<code>/delegate</code> in the CLI, or Session Target → Cloud) runs on GitHub's machines and comes back as a PR. Agent-scoped hooks are Local-only, so cloud runs rely on the repo's <code>.github/hooks</code> and your PR checks.</li>
+    </ul>
+    <div class="box analogy"><span class="k">Analogy</span><p>A worktree is a second workbench in the same workshop: same tools, same materials, but a half-finished job on one bench doesn't get in the way of the other.</p></div>
+  </div>
+  <figure class="shot">
+    <img src="images/subagents-live.png" width="956" height="1044" alt="In the Agents window, each subagent appears as a read-only chat showing its model, elapsed time and active tool call" loading="lazy" style="max-width:480px">
+    <figcaption>Following subagents live in the Agents window. Screenshot: VS Code docs.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="crib">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 17 · Reference</span>
+    <h2>Crib sheet</h2>
+    <p class="dek">Commands, keys and file shapes you'll reach for, in one place.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>In chat</h3></div>
+    <div class="tbl"><table>
+      <tbody>
+        <tr><td><code>/new</code></td><td>Scaffold a project from a sentence</td><td><code>/plan</code></td><td>Research and plan first</td></tr>
+        <tr><td><code>/compact &lt;focus&gt;</code></td><td>Summarize older history</td><td><code>/fork</code></td><td>Branch the conversation</td></tr>
+        <tr><td><code>/init</code></td><td>Draft <code>copilot-instructions.md</code></td><td><code>/agents</code> <code>/skills</code> <code>/hooks</code></td><td>Open customizations</td></tr>
+        <tr><td><code>/create-skill</code></td><td>Generate a skill</td><td><code>/create-hook</code></td><td>Generate a hook</td></tr>
+        <tr><td><code>/troubleshoot</code></td><td>Ask the debug logs</td><td><code>/debug</code></td><td>Chat Debug view</td></tr>
+        <tr><td><code>#terminalSelection</code></td><td>Attach highlighted output</td><td><code>#problems</code> <code>#changes</code></td><td>Errors, uncommitted diff</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Keys</h3></div>
+    <div class="tbl"><table>
+      <tbody>
+        <tr><td><kbd>⌃⌘I</kbd> / <kbd>Ctrl+Alt+I</kbd></td><td>Open Chat</td><td><kbd>⌘I</kbd> / <kbd>Ctrl+I</kbd></td><td>Inline chat</td></tr>
+        <tr><td><kbd>⌘N</kbd> / <kbd>Ctrl+N</kbd> (in chat)</td><td>New session</td><td><kbd>⇧⌘P</kbd> / <kbd>Ctrl+Shift+P</kbd></td><td>Command Palette</td></tr>
+        <tr><td><kbd>⌘,</kbd> / <kbd>Ctrl+,</kbd></td><td>Settings</td><td><kbd>Ctrl+`</kbd></td><td>Terminal</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Shell</h3></div>
+    <pre><code>java -version &amp;&amp; mvn -v                                  # 17+ and 3.9+
+mvn -q test &amp;&amp; mvn -q compile &amp;&amp; java -cp target/classes com.ledgerly.payments.App
+scripts/setup-demo.sh          # Windows: scripts\setup-demo.ps1 — git repo + demo-start tag
+scripts/watch-timeline.sh      # live hook timeline
+scripts/reset-demo.sh          # back to the buggy start
+git diff demo-start --stat     # what the squad changed
+code --agents                  # open the Agents window</code></pre>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Agent file skeleton</h3></div>
+    <pre><code>---
+name: Bug Hunter
+description: Read-only specialist that finds functional and money bugs.
+user-invocable: false            # worker: hidden from the dropdown
+tools: ['read', 'search']        # least privilege: can't edit
+# model: ['Claude Haiku 4.5']    # cheap model for recon
+---
+You are a meticulous banking QA engineer. Do not edit files.
+Return a Markdown table: | # | Severity | File:line | Problem | Example | Fix |</code></pre>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Skill skeleton</h3></div>
+    <pre><code>.github/skills/&lt;name&gt;/
+├── SKILL.md        ---
+│                   name: &lt;name&gt;
+│                   description: &lt;what it does&gt;. Use when &lt;trigger words&gt;.
+│                   ---
+│                   &lt;steps, loaded only on match&gt;
+└── references/     &lt;loaded only if SKILL.md points to it&gt;</code></pre>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="glossary">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 18 · Reference</span>
+    <h2>Glossary A–Z</h2>
+    <p class="dek">Every term in one list. Each links to the chapter that explains it.</p>
+  </div>
+  <div class="gloss-tools">
+    <label for="gq" class="chip" style="border:0;padding:0">Filter</label>
+    <input id="gq" type="search" placeholder="Type a term, e.g. hook" autocomplete="off">
+    <output id="gcount" for="gq"></output>
+  </div>
+  <dl class="gloss" id="gloss">
+    <dt>Agent</dt><dd>A model in a loop that can call tools, with a persona and a tool list. Ask, Plan and Agent are built-in examples. <a href="#harness">Ch 02</a></dd>
+    <dt>Agent Debug Logs</dt><dd>Experimental panel listing every tool call, model request, skill load and hook run, with a flow chart and summary. <a href="#logs">Ch 15</a></dd>
+    <dt>Agents window</dt><dd>A VS Code window for assigning and reviewing agent sessions. <code>code --agents</code>. <a href="#harness">Ch 02</a></dd>
+    <dt>AI Credits</dt><dd>GitHub's usage-based billing since June 1, 2026: you pay per token at each model's rate. <a href="#credits">Ch 03</a></dd>
+    <dt>Ask</dt><dd>The read-only built-in agent. One bounded answer, no loop. <a href="#ladder">Ch 04</a></dd>
+    <dt>Auto</dt><dd>Lets Copilot choose the model per request. 10% cheaper than picking the same model. Has an <em>Optimize for</em> setting. <a href="#credits">Ch 03</a></dd>
+    <dt>Autopilot</dt><dd>Agent with tool approvals switched off. Preview; your org can disable it. <a href="#plan">Ch 08</a></dd>
+    <dt>BigDecimal</dt><dd>Java's exact decimal type. The right type for money. <a href="#bugs">Ch 14</a></dd>
+    <dt>Checkpoint</dt><dd>A snapshot of workspace files and chat at a request. Doesn't undo terminal commands or deployments. <a href="#plan">Ch 08</a></dd>
+    <dt>Compaction</dt><dd>Replacing older chat history with a summary to free context. <code>/compact</code>. <a href="#rot">Ch 07</a></dd>
+    <dt>Context</dt><dd>Everything the model sees on one turn. <a href="#window">Ch 06</a></dd>
+    <dt>Context rot</dt><dd>The drop in quality as the context grows. <a href="#rot">Ch 07</a></dd>
+    <dt>Context window</dt><dd>The most tokens a model can take in one request. Shown by the ring in the chat input. <a href="#window">Ch 06</a></dd>
+    <dt>Custom agent</dt><dd>An <code>.agent.md</code> file defining a role: persona, tools, model, hooks, handoffs. <a href="#subagents">Ch 12</a></dd>
+    <dt>Exit code 2</dt><dd>What a hook script returns to block an action and tell the model why. <a href="#hooks">Ch 11</a></dd>
+    <dt>Fork</dt><dd>Branching a conversation to try an alternative. <code>/fork</code>. <a href="#rot">Ch 07</a></dd>
+    <dt>HALF_EVEN</dt><dd>Banker's rounding: halves go to the nearest even digit. <a href="#bugs">Ch 14</a></dd>
+    <dt>Handoff</dt><dd>A button that switches to the next agent with the conversation and a pre-filled prompt. <a href="#subagents">Ch 12</a></dd>
+    <dt>Harness</dt><dd>The engine that runs the agent loop, applies permissions and calls tools. Chosen with Session Target. <a href="#harness">Ch 02</a></dd>
+    <dt>Hook</dt><dd>A command the harness runs at a lifecycle event. Can log, inject context or block. <a href="#hooks">Ch 11</a></dd>
+    <dt>HydraFusion</dt><dd>Research preview that mixes models for you. <a href="#harness">Ch 02</a></dd>
+    <dt>Inline chat</dt><dd>Chat inside the editor on a selection. <kbd>⌘I</kbd> / <kbd>Ctrl+I</kbd>. <a href="#precise">Ch 05</a></dd>
+    <dt>Instructions</dt><dd><code>copilot-instructions.md</code>: rules loaded on every request. <a href="#skills">Ch 10</a></dd>
+    <dt>Least privilege</dt><dd>Give each agent only the tools its job needs. <a href="#squad">Ch 13</a></dd>
+    <dt>Lost in the middle</dt><dd>Models use the start and end of the context better than the middle. <a href="#rot">Ch 07</a></dd>
+    <dt>MCP server</dt><dd>A process that offers extra tools to the agent. Each tool's definition costs tokens every turn. <a href="#stack">Ch 09</a></dd>
+    <dt>Model</dt><dd>The language model that writes text or tool calls. <a href="#harness">Ch 02</a></dd>
+    <dt>Plan</dt><dd>The built-in agent that researches and writes <code>plan.md</code> before code. <a href="#plan">Ch 08</a></dd>
+    <dt>PreToolUse</dt><dd>The hook event that fires before every tool call; where guardrails block. <a href="#hooks">Ch 11</a></dd>
+    <dt>Progressive disclosure</dt><dd>Loading a skill's detail only when needed: description → body → references. <a href="#skills">Ch 10</a></dd>
+    <dt>Quality gate</dt><dd>The Tech Lead's Stop hook: red tests mean "not done". <a href="#squad">Ch 13</a></dd>
+    <dt>Queue</dt><dd>Send a follow-up after the current turn ends. <a href="#ladder">Ch 04</a></dd>
+    <dt>Session Cost</dt><dd>Credits spent in the current session, shown in the context ring's popup. <a href="#credits">Ch 03</a></dd>
+    <dt>Session Target</dt><dd>The picker that chooses the harness: Local, Copilot, Claude, Codex, Cloud. <a href="#harness">Ch 02</a></dd>
+    <dt>Side chat</dt><dd>A question about a response that doesn't grow the main context. <a href="#rot">Ch 07</a></dd>
+    <dt>Skill</dt><dd>A folder with <code>SKILL.md</code> that loads when a task matches its description. Also a slash command. <a href="#skills">Ch 10</a></dd>
+    <dt>Steer</dt><dd>Inject a message into an agent run that's in progress. <a href="#ladder">Ch 04</a></dd>
+    <dt>Stop hook</dt><dd>Runs when an agent tries to finish; can send it back to work. <a href="#hooks">Ch 11</a></dd>
+    <dt>Subagent</dt><dd>A worker with a fresh context that returns only its result. <a href="#subagents">Ch 12</a></dd>
+    <dt>TDD</dt><dd>Test-driven development: failing test first (red), then the fix (green). <a href="#squad">Ch 13</a></dd>
+    <dt>Token</dt><dd>A chunk of text, about ¾ of a word. The unit you pay in. <a href="#credits">Ch 03</a></dd>
+    <dt>Tool</dt><dd>An action the harness offers the model: read, search, edit, execute, agent… <a href="#harness">Ch 02</a></dd>
+    <dt>Worktree</dt><dd>A second folder on the same Git repo with its own branch. <a href="#surfaces">Ch 16</a></dd>
+  </dl>
+  <p class="gloss-empty" id="gempty" hidden>No term matches that. Try a shorter word.</p>
+</section>
+
+<footer class="foot">
+  <p><strong>Sources:</strong> VS Code docs and release notes (agents, context, checkpoints, customization, hooks, subagents, Agent Debug Logs; 1.120–1.140); GitHub blog and changelog (usage-based billing, Auto model selection, HydraFusion); Chroma, <em>Context Rot</em> (2025); Liu et al., <em>Lost in the Middle</em> (2023); METR, early-2025 developer productivity study (2025); Anthropic, <em>How we built our multi-agent research system</em> (2025); Panickssery, Bowman &amp; Feng, <em>LLM Evaluators Recognize and Favor Their Own Generations</em> (2024); Saltzer &amp; Schroeder (1975); Reason, <em>Human Error</em> (1990); Miller (1956); Beck, <em>Test-Driven Development: By Example</em> (2002); Bloch, <em>Effective Java</em>; SAE J3016; PCI DSS; SEC T+1 rule (2024); reporting on Knight Capital (2012), the Vancouver Stock Exchange index (1982–83), the Boeing Model 299 (1935) and the Replit incident (2025).</p>
+  <p><strong>Images:</strong> screenshots and diagrams from the VS Code documentation and release notes (Microsoft); context-rot chart from Chroma (github.com/chroma-core/context-rot); squad architecture from the lab handout. Photos via Wikimedia Commons: taxi meter (public domain); learner car, TudorTulok (CC0); quickdraw, Cristian Bortes (CC BY 2.0); card catalog, Michael Holley (public domain); turnstiles, Fabio Sola Penna (CC BY 2.0); pit stop, pedrik (CC BY 2.0); relay baton, Irish Defence Forces (CC BY 2.0); checklist, US Air Force (public domain); flight data recorder, NTSB (public domain).</p>
+  <p>Written for VS Code 1.140 and the October 2026 edition of the lab. VS Code ships weekly: if a menu has moved, search the Command Palette.</p>
+</footer>
+
+</main>
+</div>
+
+<script>
+(function () {
+  // Glossary filter
+  var q = document.getElementById('gq');
+  var list = document.getElementById('gloss');
+  var count = document.getElementById('gcount');
+  var empty = document.getElementById('gempty');
+  var dts = Array.prototype.slice.call(list.querySelectorAll('dt'));
+  function filter() {
+    var term = q.value.trim().toLowerCase();
+    var shown = 0;
+    dts.forEach(function (dt) {
+      var dd = dt.nextElementSibling;
+      var hit = !term || dt.textContent.toLowerCase().indexOf(term) !== -1 || dd.textContent.toLowerCase().indexOf(term) !== -1;
+      dt.hidden = !hit; dd.hidden = !hit;
+      if (hit) shown++;
+    });
+    count.textContent = shown + ' of ' + dts.length + ' terms';
+    empty.hidden = shown !== 0;
+  }
+  q.addEventListener('input', filter);
+  filter();
+
+  // Copy buttons on prompts
+  document.querySelectorAll('.prompt').forEach(function (box) {
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'copy'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function () {
+      var text = box.querySelector('code').textContent;
+      function done(label) { btn.textContent = label; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(box.querySelector('code'));
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done('Press ⌘C');
+      }
+      try { navigator.clipboard.writeText(text).then(function () { done('Copied'); }, fallback); } catch (e) { fallback(); }
+    });
+    box.appendChild(btn);
+  });
+
+  // Collapse the chapter index on narrow screens
+  var toc = document.getElementById('toc');
+  var mq = window.matchMedia('(max-width: 980px)');
+  function syncToc() { if (mq.matches) toc.removeAttribute('open'); else toc.setAttribute('open', ''); }
+  syncToc();
+  if (mq.addEventListener) mq.addEventListener('change', syncToc);
+  toc.querySelector('summary').addEventListener('click', function (e) { if (!mq.matches) e.preventDefault(); });
+  toc.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { if (mq.matches) toc.removeAttribute('open'); }); });
+
+  // Highlight the current chapter
+  var links = {};
+  toc.querySelectorAll('a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var current = null;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          if (current) current.classList.remove('on');
+          current = links[en.target.id];
+          if (current) current.classList.add('on');
+        }
+      });
+    }, { rootMargin: '-15% 0px -75% 0px' });
+    document.querySelectorAll('section.part').forEach(function (s) { io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>

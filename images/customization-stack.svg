@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <rect width="1200" height="430" rx="16" fill="#0d1117"/>
+  <text x="40" y="46" fill="#e6edf3" font-size="22" font-weight="700">What goes where? Five ways to customize Copilot</text>
+  <g font-size="14">
+    <!-- header -->
+    <g fill="#8b949e" font-weight="700" font-size="12" letter-spacing="1">
+      <text x="64" y="84">TYPE</text><text x="250" y="84">FILE</text><text x="660" y="84">LOADED WHEN</text><text x="945" y="84">USE IT FOR</text>
+    </g>
+    <g transform="translate(40,98)">
+      <rect width="1120" height="56" rx="10" fill="#2f81f7" fill-opacity="0.12" stroke="#2f81f7"/>
+      <text x="24" y="34" fill="#79c0ff" font-weight="700" font-size="17">Instructions</text>
+      <text x="210" y="34" fill="#e6edf3" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">.github/copilot-instructions.md · AGENTS.md</text>
+      <text x="620" y="34" fill="#e6edf3">Always (every request)</text>
+      <text x="905" y="34" fill="#8b949e">Build commands, conventions</text>
+    </g>
+    <g transform="translate(40,162)">
+      <rect width="1120" height="56" rx="10" fill="#3fb950" fill-opacity="0.12" stroke="#3fb950"/>
+      <text x="24" y="34" fill="#7ee787" font-weight="700" font-size="17">Skills</text>
+      <text x="210" y="34" fill="#e6edf3" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">.github/skills/&lt;name&gt;/SKILL.md (+ scripts)</text>
+      <text x="620" y="34" fill="#e6edf3">On demand (description match or /name)</text>
+      <text x="905" y="34" fill="#8b949e">Know-how, procedures, scripts</text>
+    </g>
+    <g transform="translate(40,226)">
+      <rect width="1120" height="56" rx="10" fill="#a371f7" fill-opacity="0.14" stroke="#a371f7"/>
+      <text x="24" y="34" fill="#d2a8ff" font-weight="700" font-size="17">Custom agents</text>
+      <text x="210" y="34" fill="#e6edf3" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">.github/agents/&lt;name&gt;.agent.md</text>
+      <text x="620" y="34" fill="#e6edf3">When selected or used as a subagent</text>
+      <text x="905" y="34" fill="#8b949e">Role, tools, model, handoffs</text>
+    </g>
+    <g transform="translate(40,290)">
+      <rect width="1120" height="56" rx="10" fill="#d29922" fill-opacity="0.12" stroke="#d29922"/>
+      <text x="24" y="34" fill="#e3b341" font-weight="700" font-size="17">Hooks</text>
+      <text x="210" y="34" fill="#e6edf3" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">.github/hooks/*.json</text>
+      <text x="620" y="34" fill="#e6edf3">At lifecycle events, run by the harness</text>
+      <text x="905" y="34" fill="#8b949e">Guarantees: block, audit, gate</text>
+    </g>
+    <g transform="translate(40,354)">
+      <rect width="1120" height="56" rx="10" fill="#f85149" fill-opacity="0.10" stroke="#f85149"/>
+      <text x="24" y="34" fill="#ffa198" font-weight="700" font-size="17">MCP servers</text>
+      <text x="210" y="34" fill="#e6edf3" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">.mcp.json (workspace root)</text>
+      <text x="620" y="34" fill="#e6edf3">Tools always available to the agent</text>
+      <text x="905" y="34" fill="#8b949e">Jira, databases, internal APIs</text>
+    </g>
+  </g>
+</svg>

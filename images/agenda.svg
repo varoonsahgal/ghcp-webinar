@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <rect width="1200" height="300" rx="16" fill="#0d1117"/>
+  <text x="40" y="46" fill="#e6edf3" font-size="22" font-weight="700">The 2-hour plan</text>
+  <text x="1160" y="46" fill="#8b949e" font-size="14" text-anchor="end">bar widths are proportional to time</text>
+  <!-- proportional bar: 1120px / 120 min -->
+  <g>
+    <rect x="40"   y="66" width="91"  height="14" rx="4" fill="#2f81f7"/>
+    <rect x="135"  y="66" width="323" height="14" rx="4" fill="#3fb950"/>
+    <rect x="462"  y="66" width="43"  height="14" rx="4" fill="#484f58"/>
+    <rect x="509"  y="66" width="276" height="14" rx="4" fill="#d29922"/>
+    <rect x="789"  y="66" width="323" height="14" rx="4" fill="#a371f7"/>
+    <rect x="1116" y="66" width="44"  height="14" rx="4" fill="#f85149"/>
+  </g>
+  <!-- cards: 5 equal columns -->
+  <g font-size="14">
+    <g transform="translate(40,100)">
+      <rect width="208" height="170" rx="12" fill="#2f81f7" fill-opacity="0.12" stroke="#2f81f7"/>
+      <text x="16" y="30" fill="#79c0ff" font-weight="700" font-size="13" letter-spacing="1">0:00 · 10 MIN</text>
+      <text x="16" y="58" fill="#e6edf3" font-weight="700" font-size="18">Part 0</text>
+      <text x="16" y="82" fill="#e6edf3">What's new in Copilot</text>
+      <text x="16" y="108" fill="#8b949e">Harnesses · Agents window</text>
+      <text x="16" y="128" fill="#8b949e">Credits · Auto · HydraFusion</text>
+    </g>
+    <g transform="translate(268,100)">
+      <rect width="208" height="170" rx="12" fill="#3fb950" fill-opacity="0.12" stroke="#3fb950"/>
+      <text x="16" y="30" fill="#7ee787" font-weight="700" font-size="13" letter-spacing="1">0:10 · 35 MIN</text>
+      <text x="16" y="58" fill="#e6edf3" font-weight="700" font-size="18">Part 1</text>
+      <text x="16" y="82" fill="#e6edf3">Choose your autonomy</text>
+      <text x="16" y="108" fill="#8b949e">Ask · Agent · Context window</text>
+      <text x="16" y="128" fill="#8b949e">Plan · Checkpoints</text>
+    </g>
+    <g transform="translate(496,100)">
+      <rect width="208" height="170" rx="12" fill="#d29922" fill-opacity="0.12" stroke="#d29922"/>
+      <text x="16" y="30" fill="#e3b341" font-weight="700" font-size="13" letter-spacing="1">0:50 · 30 MIN</text>
+      <text x="16" y="58" fill="#e6edf3" font-weight="700" font-size="18">Part 2</text>
+      <text x="16" y="82" fill="#e6edf3">Teach Copilot your team</text>
+      <text x="16" y="108" fill="#8b949e">Instructions · Skills</text>
+      <text x="16" y="128" fill="#8b949e">Hooks (audit + guardrails)</text>
+      <text x="16" y="154" fill="#484f58" font-size="12">break 0:45 – 0:50</text>
+    </g>
+    <g transform="translate(724,100)">
+      <rect width="208" height="170" rx="12" fill="#a371f7" fill-opacity="0.14" stroke="#a371f7"/>
+      <text x="16" y="30" fill="#d2a8ff" font-weight="700" font-size="13" letter-spacing="1">1:20 · 35 MIN</text>
+      <text x="16" y="58" fill="#e6edf3" font-weight="700" font-size="18">Part 3</text>
+      <text x="16" y="82" fill="#e6edf3">The Agent Squad</text>
+      <text x="16" y="108" fill="#8b949e">Subagents: chat + agent files</text>
+      <text x="16" y="128" fill="#8b949e">Handoffs · Logs · CLI /fleet</text>
+    </g>
+    <g transform="translate(952,100)">
+      <rect width="208" height="170" rx="12" fill="#f85149" fill-opacity="0.12" stroke="#f85149"/>
+      <text x="16" y="30" fill="#ffa198" font-weight="700" font-size="13" letter-spacing="1">1:55 · 5 MIN</text>
+      <text x="16" y="58" fill="#e6edf3" font-weight="700" font-size="18">Wrap-up</text>
+      <text x="16" y="82" fill="#e6edf3">Takeaways + homework</text>
+      <text x="16" y="108" fill="#8b949e">What to adopt Monday</text>
+    </g>
+  </g>
+</svg>

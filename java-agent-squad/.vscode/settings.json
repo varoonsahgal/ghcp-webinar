@@ -1,0 +1,14 @@
+{
+  // Hooks (Local harness). On by default; listed here so it's obvious in class.
+  "chat.useHooks": true,
+
+  // Logs: Agent Debug Log panel (Local) and Agent Host sessions (Copilot/Claude/Codex harness).
+  "github.copilot.chat.agentDebugLog.fileLogging.enabled": true,
+  "chat.agentHost.agentDebugLog.enabled": true,
+
+  // Subagents: show each subagent's AI-credit cost and open them in their own editor.
+  "chat.subagents.showCreditUsage": true,
+  "chat.subagents.useRichRendering": true,
+
+  "files.exclude": { "target": true }
+}

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="arrow" x1="0" x2="1"><stop offset="0" stop-color="#3fb950"/><stop offset="0.5" stop-color="#d29922"/><stop offset="1" stop-color="#f85149"/></linearGradient>
+  </defs>
+  <rect width="1200" height="400" rx="16" fill="#0d1117"/>
+  <text x="40" y="46" fill="#e6edf3" font-size="22" font-weight="700">The autonomy ladder: pick the lowest rung that gets the job done</text>
+  <!-- steps -->
+  <g font-size="14">
+    <g transform="translate(40,260)">
+      <rect width="170" height="70" rx="10" fill="#161b22" stroke="#3fb950"/>
+      <text x="85" y="30" fill="#7ee787" text-anchor="middle" font-weight="700" font-size="17">Ask</text>
+      <text x="85" y="52" fill="#8b949e" text-anchor="middle">read-only tools</text>
+    </g>
+    <g transform="translate(230,218)">
+      <rect width="170" height="112" rx="10" fill="#161b22" stroke="#56d364"/>
+      <text x="85" y="30" fill="#7ee787" text-anchor="middle" font-weight="700" font-size="17">Plan</text>
+      <text x="85" y="52" fill="#8b949e" text-anchor="middle">researches, asks,</text>
+      <text x="85" y="70" fill="#8b949e" text-anchor="middle">writes plan.md</text>
+    </g>
+    <g transform="translate(420,176)">
+      <rect width="170" height="154" rx="10" fill="#161b22" stroke="#e3b341"/>
+      <text x="85" y="30" fill="#e3b341" text-anchor="middle" font-weight="700" font-size="17">Agent</text>
+      <text x="85" y="52" fill="#8b949e" text-anchor="middle">edits + terminal</text>
+      <text x="85" y="70" fill="#8b949e" text-anchor="middle">you approve tools</text>
+    </g>
+    <g transform="translate(610,134)">
+      <rect width="170" height="196" rx="10" fill="#161b22" stroke="#d29922"/>
+      <text x="85" y="30" fill="#e3b341" text-anchor="middle" font-weight="700" font-size="17">Autopilot</text>
+      <text x="85" y="52" fill="#8b949e" text-anchor="middle">auto-approves and</text>
+      <text x="85" y="70" fill="#8b949e" text-anchor="middle">keeps going</text>
+    </g>
+    <g transform="translate(800,92)">
+      <rect width="170" height="238" rx="10" fill="#161b22" stroke="#a371f7"/>
+      <text x="85" y="30" fill="#d2a8ff" text-anchor="middle" font-weight="700" font-size="17">Agent squad</text>
+      <text x="85" y="52" fill="#8b949e" text-anchor="middle">custom agents +</text>
+      <text x="85" y="70" fill="#8b949e" text-anchor="middle">parallel subagents</text>
+    </g>
+    <g transform="translate(990,50)">
+      <rect width="170" height="280" rx="10" fill="#161b22" stroke="#f85149"/>
+      <text x="85" y="30" fill="#ffa198" text-anchor="middle" font-weight="700" font-size="17">Cloud / scheduled</text>
+      <text x="85" y="52" fill="#8b949e" text-anchor="middle">cloud agent → PR,</text>
+      <text x="85" y="70" fill="#8b949e" text-anchor="middle">Automations, Agent</text>
+      <text x="85" y="88" fill="#8b949e" text-anchor="middle">merge</text>
+    </g>
+  </g>
+  <rect x="40" y="350" width="1120" height="8" rx="4" fill="url(#arrow)"/>
+  <g font-size="14" font-weight="600">
+    <text x="40" y="385" fill="#7ee787">more control · cheaper per task · you drive</text>
+    <text x="1160" y="385" fill="#ffa198" text-anchor="end">more autonomy · more credits · more guardrails needed</text>
+  </g>
+  <text x="40" y="100" fill="#8b949e" font-size="14">Hooks, checkpoints and</text>
+  <text x="40" y="120" fill="#8b949e" font-size="14">logs matter more as you climb</text>
+</svg>

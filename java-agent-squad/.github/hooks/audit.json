@@ -1,0 +1,52 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "bash .github/hooks/scripts/audit.sh SessionStart",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\audit.ps1 SessionStart",
+        "timeout": 10
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "type": "command",
+        "command": "bash .github/hooks/scripts/audit.sh UserPromptSubmit",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\audit.ps1 UserPromptSubmit",
+        "timeout": 10
+      }
+    ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "bash .github/hooks/scripts/audit.sh PreToolUse",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\audit.ps1 PreToolUse",
+        "timeout": 10
+      }
+    ],
+    "SubagentStart": [
+      {
+        "type": "command",
+        "command": "bash .github/hooks/scripts/audit.sh SubagentStart",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\audit.ps1 SubagentStart",
+        "timeout": 10
+      }
+    ],
+    "SubagentStop": [
+      {
+        "type": "command",
+        "command": "bash .github/hooks/scripts/audit.sh SubagentStop",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\audit.ps1 SubagentStop",
+        "timeout": 10
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "bash .github/hooks/scripts/audit.sh Stop",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\audit.ps1 Stop",
+        "timeout": 10
+      }
+    ]
+  }
+}

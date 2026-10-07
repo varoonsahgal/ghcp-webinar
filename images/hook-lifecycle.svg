@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8b949e"/></marker></defs>
+  <rect width="1200" height="360" rx="16" fill="#0d1117"/>
+  <text x="40" y="46" fill="#e6edf3" font-size="22" font-weight="700">Hook lifecycle: where you can plug in deterministic code</text>
+  <text x="40" y="70" fill="#8b949e" font-size="14">The model decides what to do. Hooks decide what is allowed, and they always run.</text>
+  <path d="M60 170 H1140" stroke="#30363d" stroke-width="4"/>
+  <g font-size="13" text-anchor="middle">
+    <!-- events -->
+    <g transform="translate(100,170)"><circle r="12" fill="#2f81f7"/><text y="-28" fill="#79c0ff" font-weight="700">SessionStart</text><text y="40" fill="#8b949e">inject context</text><text y="58" fill="#8b949e">(branch, JDK)</text></g>
+    <g transform="translate(250,170)"><circle r="12" fill="#2f81f7"/><text y="-28" fill="#79c0ff" font-weight="700">UserPromptSubmit</text><text y="40" fill="#8b949e">audit the ask</text></g>
+    <g transform="translate(420,170)"><circle r="14" fill="#f85149"/><text y="-28" fill="#ffa198" font-weight="700">PreToolUse</text><text y="40" fill="#8b949e">allow · ask · deny</text><text y="58" fill="#8b949e">rewrite input</text></g>
+    <g transform="translate(560,170)"><circle r="12" fill="#d29922"/><text y="-28" fill="#e3b341" font-weight="700">PostToolUse</text><text y="40" fill="#8b949e">format, lint,</text><text y="58" fill="#8b949e">add context</text></g>
+    <g transform="translate(720,170)"><circle r="12" fill="#a371f7"/><text y="-28" fill="#d2a8ff" font-weight="700">SubagentStart / Stop</text><text y="40" fill="#8b949e">track the squad,</text><text y="58" fill="#8b949e">brief each worker</text></g>
+    <g transform="translate(880,170)"><circle r="12" fill="#8b949e"/><text y="-28" fill="#c9d1d9" font-weight="700">PreCompact</text><text y="40" fill="#8b949e">save state before</text><text y="58" fill="#8b949e">summarizing</text></g>
+    <g transform="translate(1060,170)"><circle r="14" fill="#3fb950"/><text y="-28" fill="#7ee787" font-weight="700">Stop</text><text y="40" fill="#8b949e">quality gate:</text><text y="58" fill="#8b949e">"not done yet"</text></g>
+  </g>
+  <!-- loop -->
+  <path d="M560 122 C 560 92, 420 92, 420 118" stroke="#8b949e" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#a)"/>
+  <text x="490" y="94" fill="#8b949e" font-size="12" text-anchor="middle">repeats for every tool call</text>
+  <!-- legend -->
+  <g font-size="13">
+    <rect x="40" y="268" width="1120" height="66" rx="10" fill="#161b22" stroke="#30363d"/>
+    <text x="60" y="294" fill="#e6edf3" font-weight="700">stdin → JSON event in</text>
+    <text x="240" y="294" fill="#8b949e">tool_name, tool_input, prompt, agent_type, stop_hook_active …</text>
+    <text x="60" y="318" fill="#e6edf3" font-weight="700">stdout / exit code → decision</text>
+    <text x="290" y="318" fill="#8b949e">exit 0 = parse JSON · exit 2 = block and tell the model (stderr) · other = warn and continue</text>
+  </g>
+</svg>

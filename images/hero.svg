@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1117"/><stop offset="0.55" stop-color="#161b33"/><stop offset="1" stop-color="#2a1458"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#a371f7"/><stop offset="1" stop-color="#2f81f7"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.85" cy="0.3" r="0.5">
+      <stop offset="0" stop-color="#a371f7" stop-opacity="0.35"/><stop offset="1" stop-color="#a371f7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="380" rx="20" fill="url(#bg)"/>
+  <rect width="1200" height="380" rx="20" fill="url(#glow)"/>
+  <!-- subtle grid -->
+  <g stroke="#ffffff" stroke-opacity="0.04">
+    <path d="M0 76H1200M0 152H1200M0 228H1200M0 304H1200"/>
+    <path d="M150 0V380M300 0V380M450 0V380M600 0V380M750 0V380M900 0V380M1050 0V380"/>
+  </g>
+  <text x="60" y="78" fill="#a371f7" font-size="18" font-weight="600" letter-spacing="3">HANDS-ON LAB · OCTOBER 2026 EDITION · 2 HOURS</text>
+  <text x="60" y="140" fill="#e6edf3" font-size="50" font-weight="700">GitHub Copilot in VS Code</text>
+  <text x="60" y="198" fill="url(#accent)" font-size="40" font-weight="700">From chat modes to agent squads</text>
+  <text x="60" y="244" fill="#8b949e" font-size="20">Ask · Plan · Agent · Context window · Skills · Hooks · Custom agents · Subagents · Logs</text>
+  <!-- chips -->
+  <g font-size="15" font-weight="600">
+    <rect x="60" y="282" width="170" height="40" rx="20" fill="#2f81f7" fill-opacity="0.15" stroke="#2f81f7"/>
+    <text x="145" y="307" fill="#79c0ff" text-anchor="middle">Java 17 + Maven</text>
+    <rect x="244" y="282" width="200" height="40" rx="20" fill="#3fb950" fill-opacity="0.15" stroke="#3fb950"/>
+    <text x="344" y="307" fill="#7ee787" text-anchor="middle">Skills + Hooks</text>
+    <rect x="458" y="282" width="220" height="40" rx="20" fill="#a371f7" fill-opacity="0.15" stroke="#a371f7"/>
+    <text x="568" y="307" fill="#d2a8ff" text-anchor="middle">Agent orchestration</text>
+  </g>
+  <!-- squad glyph -->
+  <g transform="translate(905,110)">
+    <circle cx="110" cy="40" r="38" fill="#a371f7" fill-opacity="0.25" stroke="#a371f7" stroke-width="2"/>
+    <text x="110" y="48" font-size="15" font-weight="700" fill="#e6edf3" text-anchor="middle">LEAD</text>
+    <g stroke="#a371f7" stroke-width="2" stroke-dasharray="5 5" fill="none" stroke-opacity="0.8">
+      <path d="M85 70 L30 140"/><path d="M110 78 L110 140"/><path d="M135 70 L190 140"/>
+    </g>
+    <g font-size="26" text-anchor="middle">
+      <circle cx="30" cy="165" r="28" fill="#f85149" fill-opacity="0.2" stroke="#f85149" stroke-width="2"/><text x="30" y="170" font-size="12" font-weight="700" fill="#ffa198">BUGS</text>
+      <circle cx="110" cy="165" r="28" fill="#d29922" fill-opacity="0.2" stroke="#d29922" stroke-width="2"/><text x="110" y="170" font-size="12" font-weight="700" fill="#e3b341">SEC</text>
+      <circle cx="190" cy="165" r="28" fill="#3fb950" fill-opacity="0.2" stroke="#3fb950" stroke-width="2"/><text x="190" y="170" font-size="12" font-weight="700" fill="#7ee787">JAVA</text>
+    </g>
+    <text x="110" y="230" fill="#8b949e" font-size="13" text-anchor="middle">1 coordinator · parallel subagents</text>
+  </g>
+</svg>
