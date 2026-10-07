@@ -392,6 +392,28 @@ Why it happens:
 > [!WARNING]
 > **Approving a plan ≠ approving tool actions.** Autopilot auto-approves edits *and* terminal commands. Your org can disable it. Use it only where hooks and checkpoints have your back.
 
+#### 💎→🪙 Premium planning, thrifty implementation
+
+Under AI Credits, **the plan is cheap and the implementation is expensive**. The plan is a few thousand tokens of thinking. The implementation loop rereads files and test logs over and over. So spend on judgment, and save on the long loop.
+
+1. **Plan with a strong model.** Before you send the `/plan` prompt above, set **Model → Auto**, *Optimize for → **Intelligence***.
+2. **Save the plan as a file.** Run **Chat: Show Memory Files**, open `plan.md`, and save a copy in your project as `hourly-plan.md`. The new session in the next step can't see the old session's memory, but it can read a file.
+3. **Implement with a thrifty model.** Start a **new session** (`⌘N` / `Ctrl+N`). Pick **Agent**, set **Model → Auto**, *Optimize for → **Efficiency***, and send:
+
+```text
+#hourly-plan.md Implement step 1 of this plan only. Build and run the tests, then stop and summarize what changed.
+```
+
+4. Review the change, then say `next step`. Repeat until the plan is done.
+
+**👀 What to observe**
+* Compare **Session Cost** for the planning session and the implementation session.
+* The implementation session starts with an almost empty context ring. It carries the plan, not the whole planning conversation.
+* Going one step at a time gives you a natural review point, and a checkpoint, after each step.
+
+> [!TIP]
+> If the thrifty model gets stuck on a step, switch only that step to *Intelligence*, then switch back. You pay premium rates only for the hard part.
+
 ---
 
 ### ⏪ Step 7: Restore checkpoint, safe rollback
