@@ -1,0 +1,1549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Agents &amp; MCP Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Agents & MCP Field Guide: same design system as the Copilot Field Guide.
+   Layout: a flight-operations manual for the course. Dark "glass cockpit" masthead, sticky chapter index on the left,
+   one reading column on the right. Each concept is an entry: term, one-line definition, explanation, then
+   optional analogy (cyan), tidbit (amber) and trap (red) boxes. Chapters follow the order of the lab. */
+:root {
+  --paper: #F2F4F2;
+  --surface: #FFFFFF;
+  --ink: #11181C;
+  --muted: #56636B;
+  --rule: #D3DAD8;
+  --code-bg: #E5EAE8;
+  --accent: #006D77;         /* avionics teal */
+  --accent-soft: #D9F1F2;
+  --accent-ink: #00424A;
+  --amber: #8A5300;          /* caution amber, for tidbits */
+  --amber-soft: #FFF0D2;
+  --go: #1B7340;
+  --go-soft: #DCF2E3;
+  --stop: #B3261E;
+  --stop-soft: #FBE2DF;
+  --deck: #0D1A1F;           /* masthead block stays dark in both themes */
+  --deck-ink: #E8F1F2;
+  --deck-muted: #9DB2B6;
+  --deck-glow: #5FE0E6;
+  --deck-amber: #F6B93B;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --s-0: 0.8125rem; --s-1: 1.0625rem; --s-2: 1.1875rem; --s-3: 1.5rem; --s-4: 2.25rem; --s-5: 3.5rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0B1316; --surface: #121D21; --ink: #E3ECEE; --muted: #97A9AE; --rule: #24343A;
+    --code-bg: #182529; --accent: #5FD3DB; --accent-soft: #0F3237; --accent-ink: #A9EEF2;
+    --amber: #F2B54A; --amber-soft: #352610; --go: #63C98E; --go-soft: #113021;
+    --stop: #F2877D; --stop-soft: #3A1714; --deck: #060C0E; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0B1316; --surface: #121D21; --ink: #E3ECEE; --muted: #97A9AE; --rule: #24343A;
+  --code-bg: #182529; --accent: #5FD3DB; --accent-soft: #0F3237; --accent-ink: #A9EEF2;
+  --amber: #F2B54A; --amber-soft: #352610; --go: #63C98E; --go-soft: #113021;
+  --stop: #F2877D; --stop-soft: #3A1714; --deck: #060C0E; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 1.25rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--f-body); font-size: var(--s-1); line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+code, kbd, pre { font-family: var(--f-mono); font-size: 0.84em; }
+code { background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--rule); border-bottom-width: 2px; background: var(--surface); padding: 0.05em 0.4em; border-radius: 4px; white-space: nowrap; }
+pre { background: var(--code-bg); padding: 0.9rem 1rem; border-radius: 6px; overflow-x: auto; line-height: 1.55; margin: 0; }
+pre code { background: none; padding: 0; overflow-wrap: normal; font-size: 1em; }
+h1, h2, h3 { text-wrap: balance; }
+strong { font-weight: 600; }
+
+/* Masthead */
+.mast { background: var(--deck); color: var(--deck-ink); padding-inline: 16px; }
+.mast-in { max-width: 1180px; margin: 0 auto; padding-block: 3rem 2.75rem; display: grid; gap: 2.5rem; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; }
+.eyebrow { font-family: var(--f-display); font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; font-size: var(--s-0); color: var(--deck-glow); }
+.mast h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(3.1rem, 8.5vw, 6rem); line-height: 0.9; letter-spacing: 0.005em; text-transform: uppercase; margin: 0.5rem 0 1.1rem; }
+.mast h1 span { color: var(--deck-glow); }
+.mast p { color: var(--deck-muted); max-width: 54ch; margin: 0; font-size: var(--s-2); line-height: 1.55; }
+.mast .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.4rem; }
+.mast .meta span { font-family: var(--f-mono); font-size: 0.75rem; color: var(--deck-ink); border: 1px solid #2B4249; border-radius: 4px; padding: 0.2rem 0.55rem; }
+
+/* MFD: a glass-cockpit display showing the nightly batch */
+.mfd { background: #071012; border: 1px solid #23383E; border-radius: 10px; box-shadow: inset 0 0 0 4px #0B1A1E, 0 18px 40px rgba(0,0,0,.45); padding: 1rem 1.1rem 1.1rem; font-family: var(--f-mono); font-size: 0.78rem; color: #CFE6E8; min-width: 0; }
+.mfd .hd { display: flex; justify-content: space-between; gap: 1rem; color: var(--deck-glow); border-bottom: 1px solid #1F3338; padding-bottom: 0.5rem; margin-bottom: 0.55rem; letter-spacing: 0.06em; }
+.mfd .hd b { font-weight: 500; }
+.mfd .row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0.25rem 0.8rem; padding: 0.22rem 0; font-variant-numeric: tabular-nums; align-items: baseline; }
+.mfd .was { color: #FF8A7A; text-decoration: line-through; text-decoration-color: rgba(255,138,122,.6); }
+.mfd .now { color: #7CE6A4; }
+.mfd .lbl { color: #9DB2B6; overflow-wrap: anywhere; }
+.mfd .ft { border-top: 1px solid #1F3338; margin-top: 0.55rem; padding-top: 0.5rem; color: #8FA6AA; font-size: 0.72rem; line-height: 1.5; }
+.mfd .blink { color: var(--deck-amber); }
+
+/* Frame */
+.frame { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 2.5rem 5rem; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 3.5rem; }
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1.25rem); align-self: start; max-height: calc(100vh - 2.5rem); overflow-y: auto; font-size: 0.9375rem; padding-right: 0.5rem; }
+.toc summary { list-style: none; font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; font-size: var(--s-0); color: var(--muted); margin-bottom: 0.75rem; cursor: default; }
+.toc summary::-webkit-details-marker { display: none; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.1rem; counter-reset: ch; }
+.toc li a { display: grid; grid-template-columns: 2.1rem 1fr; padding: 0.28rem 0.5rem; border-radius: 5px; color: var(--ink); text-decoration: none; line-height: 1.35; }
+.toc li a::before { counter-increment: ch; content: counter(ch, decimal-leading-zero); font-family: var(--f-mono); font-size: 0.75rem; color: var(--muted); padding-top: 0.12rem; }
+.toc li a:hover { background: var(--code-bg); }
+.toc li a.on { background: var(--accent-soft); color: var(--accent-ink); }
+.toc li a.on::before { color: var(--accent-ink); }
+.toc .grp { font-family: var(--f-display); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.7rem; color: var(--muted); padding: 0.75rem 0.5rem 0.2rem; }
+
+main { min-width: 0; }
+.part { padding-block: 0 3.5rem; }
+.part + .part { border-top: 1px solid var(--rule); padding-top: 3rem; }
+.part-h { display: grid; gap: 0.35rem; margin-bottom: 1.75rem; }
+.part-h .eyebrow { color: var(--accent); }
+.part-h h2 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.1rem, 4.6vw, var(--s-5)); line-height: 0.98; text-transform: uppercase; letter-spacing: 0.005em; margin: 0; }
+.part-h .dek { color: var(--muted); font-size: var(--s-2); max-width: 62ch; margin: 0.5rem 0 0; line-height: 1.5; }
+
+/* Concept entries */
+.entry { display: grid; gap: 0.7rem; padding-block: 1.6rem; border-top: 1px dashed var(--rule); max-width: 74ch; }
+.entry { grid-template-columns: minmax(0, 1fr); } /* keep wide code blocks from stretching the column on phones */
+.part-h + .entry, .entry.first { border-top: 0; padding-top: 0.25rem; }
+.entry-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 0.75rem; }
+.entry h3 { font-family: var(--f-body); font-weight: 600; font-size: var(--s-3); line-height: 1.25; margin: 0; letter-spacing: -0.01em; }
+.chip { font-family: var(--f-mono); font-size: 0.6875rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--rule); border-radius: 99px; padding: 0.05rem 0.55rem; white-space: nowrap; }
+.def { font-size: var(--s-2); line-height: 1.5; margin: 0; }
+.entry p { margin: 0; }
+.entry ul, .entry ol { margin: 0; padding-left: 1.25rem; display: grid; gap: 0.3rem; }
+
+.box { padding: 0.75rem 1rem 0.8rem; border-radius: 0 6px 6px 0; display: grid; gap: 0.35rem; }
+.box > .k { font-family: var(--f-display); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.75rem; }
+.box p { margin: 0; }
+.analogy { border-left: 3px solid var(--accent); background: var(--accent-soft); }
+.analogy > .k { color: var(--accent-ink); }
+.tidbit { border-left: 3px solid var(--amber); background: var(--amber-soft); }
+.tidbit > .k { color: var(--amber); }
+.trap { border-left: 3px solid var(--stop); background: var(--stop-soft); }
+.trap > .k { color: var(--stop); }
+.try { border-left: 3px solid var(--go); background: var(--go-soft); }
+.try > .k { color: var(--go); }
+.rule-line { font-family: var(--f-display); font-weight: 700; font-size: 1.75rem; line-height: 1.08; text-transform: uppercase; letter-spacing: 0.005em; color: var(--accent); margin: 0.25rem 0; max-width: 32ch; }
+
+/* Tables */
+.tbl { overflow-x: auto; max-width: 100%; }
+table { border-collapse: collapse; width: 100%; font-size: 0.96rem; }
+th, td { text-align: left; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8125rem; color: var(--muted); }
+td code { white-space: nowrap; }
+.yes { color: var(--go); font-weight: 600; } .no { color: var(--stop); font-weight: 600; } .maybe { color: var(--amber); font-weight: 600; }
+
+/* Figures */
+figure { margin: 0.4rem 0 0.2rem; max-width: 74ch; }
+figure img { display: block; border-radius: 6px; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--surface); }
+figcaption { font-size: var(--s-0); color: var(--muted); margin-top: 0.5rem; line-height: 1.5; max-width: 70ch; }
+.shot img { box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.photo-row { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr); gap: 1.75rem; align-items: start; max-width: 74ch; padding-block: 1.6rem; border-top: 1px dashed var(--rule); }
+.part-h + .photo-row { border-top: 0; padding-top: 0.25rem; }
+.photo-row figure { margin: 0; }
+.photo-row .entry { border: 0; padding: 0; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem; max-width: 74ch; }
+.pair figure { margin: 0; }
+.diagram { color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 1rem; overflow-x: auto; max-width: 74ch; margin: 0.4rem 0 0.2rem; }
+.diagram svg { display: block; width: 100%; height: auto; min-width: 540px; font-family: var(--f-body); }
+.diagram figcaption { margin-top: 0.75rem; }
+.d-box { fill: var(--surface); stroke: currentColor; stroke-width: 1.4; }
+.d-soft { fill: var(--code-bg); stroke: var(--rule); stroke-width: 1; }
+.d-acc { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.8; }
+.d-amb { fill: var(--amber-soft); stroke: var(--amber); stroke-width: 1.6; }
+.d-stop { fill: var(--stop-soft); stroke: var(--stop); stroke-width: 1.8; }
+.d-go { fill: var(--go-soft); stroke: var(--go); stroke-width: 1.8; }
+.d-line { stroke: currentColor; stroke-width: 1.4; fill: none; }
+.d-line-acc { stroke: var(--accent); stroke-width: 2.2; fill: none; }
+.d-line-stop { stroke: var(--stop); stroke-width: 1.6; fill: none; stroke-dasharray: 5 4; }
+.d-grid { stroke: var(--rule); stroke-width: 1; fill: none; }
+.d-t { fill: currentColor; font-size: 13px; }
+.d-tb { fill: currentColor; font-size: 13px; font-weight: 600; }
+.d-cap { fill: var(--muted); font-size: 11.5px; }
+.d-lbl { fill: var(--muted); font-size: 11.5px; font-family: var(--f-mono); }
+.d-h { fill: currentColor; font-family: var(--f-display); font-weight: 700; font-size: 15px; letter-spacing: 0.08em; }
+.d-acc-t { fill: var(--accent-ink); font-size: 13px; font-weight: 600; }
+.d-amb-t { fill: var(--amber); font-size: 13px; font-weight: 600; }
+.d-stop-t { fill: var(--stop); font-size: 13px; font-weight: 600; }
+.d-go-t { fill: var(--go); font-size: 13px; font-weight: 600; }
+.d-head { fill: currentColor; }
+.d-head-acc { fill: var(--accent); }
+.d-head-stop { fill: var(--stop); }
+.d-fill-acc { fill: var(--accent); }
+.d-area { fill: var(--accent-soft); stroke: none; }
+
+/* Course map */
+.mods { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; max-width: 100%; }
+.mod { background: var(--surface); padding: 1rem 1.1rem 1.1rem; display: grid; gap: 0.3rem; align-content: start; }
+.mod .n { font-family: var(--f-display); font-weight: 800; font-size: 2.4rem; line-height: 1; color: var(--accent); }
+.mod .s { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.95rem; }
+.mod .t { font-family: var(--f-mono); font-size: 0.72rem; color: var(--muted); }
+.mod p { margin: 0; font-size: 0.92rem; color: var(--muted); line-height: 1.5; }
+.mod .r { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
+
+/* Ladder */
+.ladder { display: grid; gap: 0; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; max-width: 74ch; }
+.ladder > div { display: grid; grid-template-columns: 2.4rem 8.5rem minmax(0, 1fr) minmax(0, 1fr); gap: 0.9rem; padding: 0.7rem 1rem; background: var(--surface); border-top: 1px solid var(--rule); font-size: 0.95rem; align-items: baseline; }
+.ladder > div:first-child { border-top: 0; }
+.ladder .rung { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; color: var(--accent); line-height: 1; }
+.ladder b { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 1.05rem; }
+.ladder span { color: var(--muted); }
+.ladder .hdr { background: var(--code-bg); font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.78rem; color: var(--muted); }
+
+/* Bug cards */
+.bugs { display: grid; gap: 1rem; max-width: 74ch; }
+.bug { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+.bug .bh { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; align-items: baseline; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid var(--rule); }
+.bug .bh h4 { margin: 0; font-size: 1.12rem; font-weight: 600; }
+.bug .bh .out { font-family: var(--f-mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.bug .bh .out s { color: var(--stop); }
+.bug .bh .out b { color: var(--go); font-weight: 500; }
+.bug .bb { display: grid; gap: 0.6rem; padding: 0.85rem 1rem 1rem; }
+.bug .bb p { margin: 0; }
+.bug .why { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0.3rem 0.8rem; font-size: 0.96rem; }
+.bug .why dt { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.78rem; color: var(--muted); padding-top: 0.15rem; }
+.bug .why dd { margin: 0; min-width: 0; }
+
+/* Copy button on prompts */
+.prompt { position: relative; }
+.prompt pre { padding-right: 4.5rem; }
+.copy { position: absolute; top: 0.5rem; right: 0.5rem; font: 500 0.72rem var(--f-mono); color: var(--accent-ink); background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 4px; padding: 0.2rem 0.5rem; cursor: pointer; }
+.copy:hover { background: var(--surface); }
+
+/* Glossary */
+.gloss-tools { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.gloss-tools input { font: inherit; padding: 0.55rem 0.8rem; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); border-radius: 6px; width: min(100%, 22rem); }
+.gloss-tools output { color: var(--muted); font-size: var(--s-0); font-variant-numeric: tabular-nums; }
+.gloss { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); margin: 0; max-width: 82ch; }
+.gloss dt, .gloss dd { padding: 0.55rem 0; border-top: 1px solid var(--rule); margin: 0; }
+.gloss dt { font-weight: 600; padding-right: 1rem; }
+.gloss dd a { font-size: var(--s-0); white-space: nowrap; }
+.gloss-empty { color: var(--muted); }
+
+.foot { color: var(--muted); font-size: var(--s-0); border-top: 1px solid var(--rule); padding-top: 1.5rem; max-width: 82ch; }
+.foot p { margin: 0 0 0.6rem; }
+
+@media (max-width: 980px) {
+  .frame { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .toc { position: static; max-height: none; border: 1px solid var(--rule); background: var(--surface); border-radius: 8px; padding: 0.75rem 1rem; }
+  .toc summary { cursor: pointer; margin: 0; }
+  .toc summary::after { content: " ▾"; }
+  .toc[open] summary { margin-bottom: 0.6rem; }
+  .mast-in { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 680px) {
+  .mods { grid-template-columns: minmax(0, 1fr); }
+  .photo-row, .pair { grid-template-columns: minmax(0, 1fr); }
+  .ladder > div { grid-template-columns: 2rem minmax(0, 1fr); gap: 0.2rem 0.75rem; }
+  .ladder > div > span { grid-column: 2; }
+  .ladder .hdr { display: none !important; }
+  .bug .why { grid-template-columns: minmax(0, 1fr); }
+  .gloss { grid-template-columns: minmax(0, 1fr); }
+  .gloss dd { border-top: 0; padding-top: 0; }
+  .mfd .row { grid-template-columns: minmax(0, 1fr) auto; }
+  .mfd .row .was { grid-column: 2; }
+  .mfd .row .now { grid-column: 2; }
+}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="mast-in">
+    <div>
+      <div class="eyebrow">Companion to the CG AI course wiki · GitHub Copilot in VS Code · October 2026</div>
+      <h1>Agents <span>&amp;</span> MCP Field Guide</h1>
+      <p>The ideas behind every module of the course, explained properly: how much autonomy to hand an agent, how to teach it your team's rules, how a squad of agents shares work, and how the Model Context Protocol connects all of it to real systems without handing over the keys.</p>
+      <div class="meta"><span>VS Code 1.140+</span><span>Node 24 LTS</span><span>MCP 2025-11-25 + 2026-07-28</span><span>Modules 0–4</span></div>
+    </div>
+    <div class="mfd" role="img" aria-label="An MCP wire log from the course's service-db server: the client probes server/discover and falls back to initialize, lists tools, a raw DELETE on prod is blocked by the server, and the validated delete tool returns a dry run of two rows.">
+      <div class="hd"><b>SERVICE-DB · MCP WIRE LOG</b><b>LAB 3.11</b></div>
+      <div class="row"><span class="lbl">server/discover</span><span class="was">404</span><span class="now">fallback</span></div>
+      <div class="row"><span class="lbl">initialize · 2025-11-25</span><span></span><span class="now">200</span></div>
+      <div class="row"><span class="lbl">notifications/initialized</span><span></span><span class="now">202</span></div>
+      <div class="row"><span class="lbl">tools/list</span><span></span><span class="now">2 tools</span></div>
+      <div class="row"><span class="lbl">run_raw_sql DELETE … prod</span><span class="was">allowed</span><span class="now">blocked</span></div>
+      <div class="row"><span class="lbl">delete_services dryRun:true</span><span></span><span class="now">2 rows</span></div>
+      <div class="ft">The model asked politely to delete production. <span class="blink">The server said no. MCP doesn't make tools safe; servers do.</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="frame">
+  <details class="toc" id="toc" open>
+    <summary>Chapters</summary>
+    <ol>
+      <li class="grp">Ground school</li>
+      <li><a href="#start">Start here</a></li>
+      <li><a href="#harness">Harness, agent, model</a></li>
+      <li><a href="#credits">Tokens &amp; AI Credits</a></li>
+      <li class="grp">Part A · Autonomy &amp; context</li>
+      <li><a href="#ladder">The autonomy ladder</a></li>
+      <li><a href="#context">Context &amp; context rot</a></li>
+      <li><a href="#plan">Plan, checkpoints, Git</a></li>
+      <li class="grp">Part B · Teach your team</li>
+      <li><a href="#guidance">Where guidance lives</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#hooks">Hooks</a></li>
+      <li class="grp">Part C · Agent teams</li>
+      <li><a href="#subagents">Agents, subagents, handoffs</a></li>
+      <li><a href="#logs">Prove what happened</a></li>
+      <li><a href="#cloud">Local vs cloud agents</a></li>
+      <li class="grp">Part D · MCP</li>
+      <li><a href="#mcp">What MCP is</a></li>
+      <li><a href="#protocol">One protocol, many transports</a></li>
+      <li><a href="#wiring">Wiring servers into VS Code</a></li>
+      <li><a href="#choosing">How the model picks a tool</a></li>
+      <li><a href="#boundary">The security boundary</a></li>
+      <li><a href="#design">Designing great tools</a></li>
+      <li><a href="#beyond">Resources, prompts, elicitation</a></li>
+      <li><a href="#remote">Remote servers &amp; sandboxing</a></li>
+      <li><a href="#testing">Inspector &amp; testing</a></li>
+      <li><a href="#stateless">MCP in 2026</a></li>
+      <li class="grp">Reference</li>
+      <li><a href="#crib">Crib sheet</a></li>
+      <li><a href="#glossary">Glossary A–Z</a></li>
+    </ol>
+  </details>
+
+<main>
+
+<!-- ============================================================ -->
+<section class="part" id="start">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 01 · Ground school</span>
+    <h2>Start here</h2>
+    <p class="dek">What the course covers, in what order, and the one question every chapter keeps asking.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The one question</h3><span class="chip">Whole course</span></div>
+    <p class="def">How much control should I hand to the AI for this task, and which controls should I never hand over?</p>
+    <p>Copilot can now edit dozens of files, run your build, start helpers that work in parallel, call your databases through MCP and open a pull request. Every one of those powers is optional. The skill is picking the right amount for each job, and writing down the rules that hold however much you hand over.</p>
+    <p class="rule-line">Prompts guide. Hooks and servers enforce.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The course on one screen</h3><span class="chip">Wiki modules</span></div>
+    <p>Each module adds a layer. Every lab in the <a href="https://github.com/varoonsahgal/cg-ai-material/wiki/">course wiki</a> has a guided Part A and a less-guided Part B with hints. This guide explains the <em>why</em> behind both.</p>
+  </div>
+  <div class="mods" role="list">
+    <div class="mod" role="listitem"><span class="n">0</span><span class="s">Orientation</span><span class="t">~1 hour</span><p>The timeline from autocomplete to agents, the chat symbols, AI Credits, and local models.</p><span class="r"><a href="https://github.com/varoonsahgal/cg-ai-material/wiki/.11-%E2%80%90-October-2026-%E2%80%90-GitHub-Copilot-in-VS-Code-%E2%80%94-Visual-Timeline-of-Agents,-Customization,-and-Automation">Start with .11 →</a></span></div>
+    <div class="mod" role="listitem"><span class="n">1</span><span class="s">Instructions</span><span class="t">labs .2 – 1.3</span><p>Modes, repository instructions, enforcing standards in PRs, and a first MCP server (GitHub).</p><span class="r">Rules the repo carries for you.</span></div>
+    <div class="mod" role="listitem"><span class="n">2</span><span class="s">Agents, skills, hooks</span><span class="t">labs 2.01 – 2.15</span><p>An agent team builds a telemetry dashboard. Skills, AGENTS.md, a self-healing build hook, the cloud agent.</p><span class="r"><a href="https://github.com/varoonsahgal/cg-ai-material/wiki/2.01-%E2%80%90-Reading-%E2%80%90-The-Copilot-Customization-Map">Start with 2.01 →</a></span></div>
+    <div class="mod" role="listitem"><span class="n">3</span><span class="s">MCP fundamentals</span><span class="t">labs 3.00 – 3.12</span><p>Hand-written JSON-RPC, stdio vs HTTP, the Inspector, and a raw-SQL tool you exploit and then fix.</p><span class="r"><a href="https://github.com/varoonsahgal/cg-ai-material/wiki/3.00-%E2%80%90-Lab-%E2%80%90-MCP-Environment-Setup-(Prerequisite)">Start with 3.00 →</a></span></div>
+    <div class="mod" role="listitem"><span class="n">4</span><span class="s">Advanced MCP</span><span class="t">labs 4.00 – 4.05</span><p>Resources and prompts, tool design, elicitation, remote servers with auth, testing in CI.</p><span class="r"><a href="https://github.com/varoonsahgal/cg-ai-material/wiki/4.00-%E2%80%90-Reading-%E2%80%90-MCP-in-Late-2026-%E2%80%90-What-Changed">Start with 4.00 →</a></span></div>
+    <div class="mod" role="listitem"><span class="n">★</span><span class="s">Capstones</span><span class="t">2.15 · 4.06</span><p>Ship a feature with your own agent team, then give that team a fleet-telemetry MCP server.</p><span class="r"><a href="https://github.com/varoonsahgal/cg-ai-material/wiki/4.06-%E2%80%90-Capstone-%E2%80%90-Fleet-Telemetry-MCP-Server-for-Your-Agent-Team">Capstone 4.06 →</a></span></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The two codebases</h3><span class="chip">Modules 2–4</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Project</th><th>What it is</th><th>Used in</th></tr></thead>
+      <tbody>
+        <tr><td><strong>jd-dashboard</strong></td><td>A React + Vite dashboard of simulated farm-equipment telemetry: engine temperature, fuel, GPS, alerts. Built by a team of four custom agents.</td><td>Module 2, capstone 4.06</td></tr>
+        <tr><td><strong>mcp/</strong> (service-db)</td><td>A Node project with a SQLite service inventory. You write MCP servers for it by hand, then with the official v2 SDK.</td><td>Modules 3 and 4</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box trap"><span class="k">Setup trap</span><p>Use <strong>one Node version</strong> (24 LTS, or at least 22.19) for everything. Native modules like <code>better-sqlite3</code> are compiled for the Node that installed them; if VS Code launches your server with a different Node you'll see <code>ERR_DLOPEN_FAILED</code>.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="harness">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 02 · Ground school</span>
+    <h2>Harness, agent, model</h2>
+    <p class="dek">Three separate dials that people blur into one word, "Copilot". Keeping them apart explains most surprises.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The three dials</h3><span class="chip">Module 0</span></div>
+    <p class="def">The <strong>model</strong> is the brain. The <strong>agent</strong> is the role it plays. The <strong>harness</strong> is the engine that runs the loop, applies permissions and calls tools.</p>
+    <ul>
+      <li><strong>Model:</strong> a specific model, or <strong>Auto</strong>, which picks per request and is 10% cheaper.</li>
+      <li><strong>Agent:</strong> Ask, Plan, Agent, or a custom agent such as the course's Orchestrator. An agent is a persona plus a tool list plus, optionally, a model and hooks.</li>
+      <li><strong>Harness</strong>, chosen with <strong>Session Target</strong>: <em>Local</em> (VS Code's own loop, used in most labs), <em>Copilot</em> (the Copilot CLI engine), <em>Claude</em>, <em>Codex</em>, and <em>Cloud</em> (runs remotely, returns a PR).</li>
+    </ul>
+  </div>
+  <figure class="shot">
+    <img src="../field-guide/images/harness-picker.webp" width="1190" height="481" alt="The Session Target picker listing Copilot, Local, Cloud, Claude and Codex" loading="lazy">
+    <figcaption>Session Target chooses the harness. Changing the model doesn't change it. Screenshot: VS Code release notes.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The agent loop</h3><span class="chip">Foundations</span></div>
+    <p>A model on its own only writes text. An agent works because the harness offers the model a menu of <strong>tools</strong> (read, search, edit, execute, start a subagent, and every tool from your MCP servers). When the model replies with a tool request, the harness checks the rules, runs it, and feeds the result back. The loop repeats until the model answers in plain text.</p>
+  </div>
+  <figure class="diagram">
+    <svg viewBox="0 0 720 236" role="img" aria-label="The agent loop: you send a prompt to the harness, the harness sends context to the model, the model replies with a tool call, the harness runs hooks and approvals and then the tool, which may be a built-in tool or an MCP server, and the result goes back to the model.">
+      <defs>
+        <marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-head"/></marker>
+        <marker id="m1a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-head-acc"/></marker>
+      </defs>
+      <rect x="14" y="90" width="118" height="56" rx="8" class="d-box"/>
+      <text x="73" y="114" text-anchor="middle" class="d-tb">You</text>
+      <text x="73" y="132" text-anchor="middle" class="d-cap">type a prompt</text>
+      <rect x="196" y="22" width="226" height="196" rx="10" class="d-box"/>
+      <text x="309" y="48" text-anchor="middle" class="d-h">HARNESS</text>
+      <text x="309" y="70" text-anchor="middle" class="d-cap">assembles context every turn</text>
+      <text x="309" y="87" text-anchor="middle" class="d-cap">loops until the model stops</text>
+      <rect x="220" y="104" width="178" height="40" rx="7" class="d-amb"/>
+      <text x="309" y="129" text-anchor="middle" class="d-amb-t">hooks · PreToolUse</text>
+      <rect x="220" y="154" width="178" height="44" rx="7" class="d-acc"/>
+      <text x="309" y="173" text-anchor="middle" class="d-acc-t">approvals</text>
+      <text x="309" y="189" text-anchor="middle" class="d-lbl">you allow or deny</text>
+      <rect x="506" y="22" width="198" height="66" rx="8" class="d-box"/>
+      <text x="605" y="49" text-anchor="middle" class="d-h">MODEL</text>
+      <text x="605" y="70" text-anchor="middle" class="d-cap">writes text or a tool call</text>
+      <rect x="506" y="150" width="198" height="66" rx="8" class="d-box"/>
+      <text x="605" y="177" text-anchor="middle" class="d-h">TOOLS</text>
+      <text x="605" y="198" text-anchor="middle" class="d-lbl">built-in · MCP servers</text>
+      <line x1="132" y1="118" x2="192" y2="118" class="d-line" marker-end="url(#m1)"/>
+      <line x1="422" y1="42" x2="502" y2="42" class="d-line" marker-end="url(#m1)"/>
+      <text x="462" y="35" text-anchor="middle" class="d-lbl">context</text>
+      <line x1="504" y1="72" x2="426" y2="72" class="d-line" marker-end="url(#m1)"/>
+      <text x="465" y="90" text-anchor="middle" class="d-lbl">tool call</text>
+      <line x1="398" y1="168" x2="502" y2="168" class="d-line-acc" marker-end="url(#m1a)"/>
+      <text x="452" y="160" text-anchor="middle" class="d-lbl">if allowed</text>
+      <line x1="504" y1="204" x2="426" y2="204" class="d-line" marker-end="url(#m1)"/>
+      <text x="465" y="222" text-anchor="middle" class="d-lbl">result</text>
+    </svg>
+    <figcaption>The model never touches your disk or your database. Every action is a request the harness can check, log, ask you about, or block. MCP servers plug in on the right, as more tools.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Why the harness matters</h3><span class="chip">Module 2</span></div>
+    <p>Hooks, tool names and some settings are <strong>harness-specific</strong>. A Local hook uses events like <code>PostToolUse</code> and fields like <code>tool_name</code>; the Copilot harness reads the same <code>.github/hooks</code> folder but uses Copilot CLI's camelCase events and payloads. That's why the hook labs pin <strong>Session Target → Local</strong>.</p>
+    <div class="box analogy"><span class="k">Analogy</span><p>The model is a brilliant contractor who can only talk. The harness is the site office: it hands out the tools, keeps the sign-in sheet and enforces site rules. The agent is the job title on the badge. Move to a different site office and the rules change, even with the same contractor.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The Agents window, and weekly releases</h3><span class="chip">Module 0</span></div>
+    <p>The Agents window (Stable since 1.120, May 2026) is built for assigning and reviewing many agent sessions: worktrees, Dev Containers, scheduled automations, a Changes panel and Create PR. VS Code has shipped <strong>weekly</strong> since 1.111 (March 2026), so screens drift fast. When a menu has moved, search the Command Palette.</p>
+    <div class="box tidbit"><span class="k">Tidbit</span><p><strong>Edit mode</strong> was deprecated in 1.110 and then removed. Ask, Plan and Agent are themselves just custom agents with different tool lists. If you want a "constrained editor", you write one.</p></div>
+  </div>
+  <figure class="shot">
+    <img src="../field-guide/images/agents-window.png" width="1938" height="1099" alt="The Agents window with sessions, chat, changes and files panels annotated" loading="lazy">
+    <figcaption>The Agents window. Screenshot: VS Code docs.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="credits">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 03 · Ground school</span>
+    <h2>Tokens &amp; AI Credits</h2>
+    <p class="dek">Since June 1, 2026 you pay for what the model reads and writes, not for how many times you press Enter.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="../field-guide/images/taxi-meter.jpg" width="1100" height="825" alt="A taxi meter on a car dashboard in Japan" loading="lazy">
+      <figcaption>A taxi meter. Photo: Wikimedia Commons, public domain.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Tokens and credits</h3><span class="chip">.19</span></div>
+      <p class="def">1 AI credit = $0.01. Each request is metered by input, cached input and output tokens, at the price of the model that handled it.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>The old premium request was a bus ticket: one fare per ride. AI Credits is a taxi meter: it runs for the whole trip. A 40-step agent loop that rereads the same five files is a long detour.</p></div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>What drives cost</h3><span class="chip">.19</span></div>
+    <ul>
+      <li><strong>The whole context is re-sent every step.</strong> Caching makes repeats cheaper, not free.</li>
+      <li><strong>Tool results pile up.</strong> File reads, test logs and big MCP results outweigh what you typed.</li>
+      <li><strong>Every enabled tool costs tokens every turn.</strong> An MCP server with 40 tools you never use isn't free.</li>
+      <li><strong>Subagents multiply.</strong> Each has its own context and its own bill.</li>
+    </ul>
+    <div class="tbl"><table>
+      <thead><tr><th>Plan</th><th>Price</th><th>Credits / month</th></tr></thead>
+      <tbody>
+        <tr><td>Pro</td><td>$10</td><td>1,500</td></tr>
+        <tr><td>Pro+</td><td>$39</td><td>7,000</td></tr>
+        <tr><td>Max</td><td>$100</td><td>20,000</td></tr>
+        <tr><td>Business · Enterprise</td><td>per seat</td><td>1,900 · 3,900 per user, pooled</td></tr>
+      </tbody>
+    </table></div>
+    <p>Code completions and Next Edit Suggestions don't use credits. Check the <a href="https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing">live price list</a> before relying on numbers.</p>
+  </div>
+  <div class="pair">
+    <figure class="shot"><img src="../field-guide/images/session-cost.webp" width="500" height="372" alt="The session info popup showing Session Cost and context usage" loading="lazy"><figcaption>Click the context ring for <strong>Session Cost</strong>.</figcaption></figure>
+    <figure class="shot"><img src="../field-guide/images/auto-optimize.webp" width="620" height="407" alt="The Auto model Optimize for menu" loading="lazy"><figcaption><strong>Auto → Optimize for</strong>. Screenshots: VS Code release notes.</figcaption></figure>
+  </div>
+  <div class="entry">
+    <div class="box trap"><span class="k">Trap</span><p>Long agent loops with a big model add up fast. In the course's worked example, one 30-step session costs about 160 credits on Opus versus about 37 on a lightweight model. Give read-only subagents a cheap <code>model:</code>, and start a fresh chat per task.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="ladder">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 04 · Part A</span>
+    <h2>The autonomy ladder</h2>
+    <p class="dek">Each rung buys speed with tokens and trust. Choosing the lowest rung that gets the job done is the skill.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="../field-guide/images/learner-car.jpg" width="825" height="1100" alt="A small red learner car with an L plate" loading="lazy">
+      <figcaption>An L plate: capable but supervised. Photo: TudorTulok, Wikimedia Commons, CC0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Autonomy is a dial</h3><span class="chip">Module 0 · .2</span></div>
+      <p class="def">Each rung gives the AI more freedom to act without asking you, and needs more guardrails to be safe.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>Ask is a passenger giving directions. Agent is a learner driver with you beside them, approving each turn onto a main road. Autopilot is letting them drive alone. Hooks, checkpoints and server-side guardrails are the brakes you fit first.</p></div>
+    </div>
+  </div>
+
+  <div class="ladder" role="table" aria-label="The autonomy ladder">
+    <div class="hdr" role="row"><span role="columnheader">#</span><span role="columnheader">Rung</span><span role="columnheader">What it does</span><span role="columnheader">Use it when</span></div>
+    <div role="row"><span class="rung" role="cell">1</span><b role="cell">Ask</b><span role="cell">Read-only tools. One bounded answer.</span><span role="cell">Explaining, exploring, one-shot answers.</span></div>
+    <div role="row"><span class="rung" role="cell">2</span><b role="cell">Plan</b><span role="cell">Researches, asks clarifying questions, writes a plan.</span><span role="cell">The change is risky or fuzzy.</span></div>
+    <div role="row"><span class="rung" role="cell">3</span><b role="cell">Agent</b><span role="cell">Edits, runs commands, calls MCP tools, fixes its own mistakes. You approve tools.</span><span role="cell">Multi-step work you can verify.</span></div>
+    <div role="row"><span class="rung" role="cell">4</span><b role="cell">Autopilot</b><span role="cell">Agent with approvals switched off.</span><span role="cell">Hooks and checkpoints have your back.</span></div>
+    <div role="row"><span class="rung" role="cell">5</span><b role="cell">Agent team</b><span role="cell">A coordinator plus least-privilege specialists, some in parallel.</span><span role="cell">Big tasks with separable parts.</span></div>
+    <div role="row"><span class="rung" role="cell">6</span><b role="cell">Cloud agent</b><span role="cell">Runs on GitHub's machines, returns a PR.</span><span role="cell">Well-specified chores you'll review anyway.</span></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Is Agent overkill?</h3><span class="chip">Discussion</span></div>
+    <p>An Agent turn can run 10 to 40 tool calls. Under token billing, Ask with good context is often genuinely cheaper. Reach for Agent when the work needs <em>doing</em>, not just knowing.</p>
+    <p class="rule-line">More autonomy is not always better.</p>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>A 2025 METR study measured 16 experienced open-source developers as 19% <em>slower</em> on real tasks with AI tools, while they believed they'd been about 20% faster. Measure, don't assume.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="context">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 05 · Part A</span>
+    <h2>Context &amp; context rot</h2>
+    <p class="dek">The model has no memory between calls. Everything it "knows" is whatever the harness packed into this one request, and more isn't better.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The context window</h3><span class="chip">.12 · 2.04</span></div>
+    <p class="def">The context is everything the model sees on a turn. The window is the most it can hold, in tokens.</p>
+    <p>A fresh chat doesn't know your other chat. A subagent doesn't know its parent's history. An MCP server's tool <em>descriptions</em> are in every request; its <em>results</em> pile up as the session runs. If something must survive, write it somewhere that gets loaded: instructions, a skill, a plan file.</p>
+    <div class="box analogy"><span class="k">Analogy</span><p>The context window is a desk, not a filing cabinet. A bigger desk lets you spread out more papers, but pile on enough old drafts and stack traces and you start working from the wrong page.</p></div>
+  </div>
+  <div class="pair">
+    <figure class="shot"><img src="../field-guide/images/context-ring.png" width="600" height="415" alt="The context window popup with Session Cost and usage breakdown" loading="lazy"><figcaption>The context ring's popup.</figcaption></figure>
+    <figure class="shot"><img src="../field-guide/images/context-assembly.png" width="2520" height="1260" alt="The six layers that make up each prompt" loading="lazy"><figcaption>What goes into each request. Diagrams: VS Code docs.</figcaption></figure>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Context rot</h3><span class="chip">Module 2</span></div>
+    <p class="def">The measurable drop in quality as input grows, long before the window is full.</p>
+    <ul>
+      <li><strong>Lost in the middle.</strong> Early instructions in a long session end up in the middle, where models use them least.</li>
+      <li><strong>Distractors.</strong> An old stack trace or the previous version of a file actively misleads.</li>
+      <li><strong>Symptoms:</strong> forgets a rule it followed an hour ago, reintroduces a fixed bug, rereads files, invents names.</li>
+    </ul>
+  </div>
+  <figure class="shot">
+    <img src="../field-guide/images/context-rot-chart.png" width="1189" height="790" alt="Chroma chart: model scores fall as input length grows" loading="lazy">
+    <figcaption>Performance falls with input length on a trivially simple task. Source: Chroma, <em>Context Rot</em> (2025).</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The hygiene toolkit</h3><span class="chip">Every lab</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Move</th><th>When</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Precise context</strong></td><td>Always</td><td><code>#file</code>, <code>#selection</code>, <code>#read/problems</code>, MCP resources</td></tr>
+        <tr><td><strong>Compact</strong></td><td>Filling up</td><td><code>/compact focus on the API decisions</code></td></tr>
+        <tr><td><strong>New session</strong></td><td>New task or rot</td><td>Carry over a plan file, not the chat</td></tr>
+        <tr><td><strong>Subagent</strong></td><td>Noisy research</td><td>The work stays in its window; only the summary returns</td></tr>
+        <tr><td><strong>Fewer tools</strong></td><td>Many MCP servers</td><td>Turn unused ones off in <strong>Configure Tools</strong></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="plan">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 06 · Part A</span>
+    <h2>Plan, checkpoints, Git</h2>
+    <p class="dek">Think before you build, and know exactly which undo button covers what.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The Plan agent</h3><span class="chip">1.94</span></div>
+    <p class="def">Researches with read-only tools, asks clarifying questions, and writes a reviewable plan before any code changes.</p>
+    <p>Run <code>/plan …</code>. In the Local harness the plan lives in session memory (<code>/memories/session/plan.md</code>); then choose <strong>Start Implementation</strong> or <strong>Open in Editor</strong> to tweak it first. A plan file is externalized memory: it survives compaction and new sessions.</p>
+    <div class="box tidbit"><span class="k">Cheap trick</span><p>Plan with a strong reasoning model, implement with a cheaper one. Set <code>chat.planAgent.defaultModel</code>, or choose <strong>Approve Plan Only</strong> and switch models.</p></div>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="../field-guide/images/quickdraw.jpg" width="733" height="1100" alt="A quickdraw clipped to a climbing bolt" loading="lazy">
+      <figcaption>A quickdraw on a bolt. Photo: Cristian Bortes, Wikimedia Commons, CC BY 2.0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Checkpoints</h3><span class="chip">Every lab</span></div>
+      <p class="def">Snapshots of workspace files and chat at each request. Hover a request → <strong>Restore Checkpoint</strong>.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>A climber clips into a bolt every few metres, so a fall only drops them to the last clip. But a clip can't catch a rock already knocked onto someone below. Checkpoints don't undo terminal commands, database writes or MCP tool calls.</p></div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="tbl"><table>
+      <thead><tr><th>Action</th><th>Checkpoint</th><th>Git</th></tr></thead>
+      <tbody>
+        <tr><td>Files the agent edited</td><td class="yes">Restores</td><td class="yes">If committed</td></tr>
+        <tr><td>Terminal commands, installs</td><td class="no">No</td><td class="maybe">Tracked files only</td></tr>
+        <tr><td>MCP tool calls (DB writes, API calls)</td><td class="no">No</td><td class="no">No</td></tr>
+        <tr><td>Pushed commits</td><td class="no">No</td><td class="maybe">Revert, visibly</td></tr>
+      </tbody>
+    </table></div>
+    <p class="rule-line">Nothing in the editor undoes a DELETE on prod.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="guidance">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 07 · Part B</span>
+    <h2>Where guidance lives</h2>
+    <p class="dek">Rules go in instructions. Tasks go in prompt files. Roles go in custom agents. Know-how goes in skills. Must-always-happen goes in hooks.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The customization map</h3><span class="chip">1.91 · 2.01</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>File</th><th>Loaded when</th><th>Can the model ignore it?</th></tr></thead>
+      <tbody>
+        <tr><td><code>.github/copilot-instructions.md</code></td><td>Every chat and agent request</td><td class="maybe">Sometimes</td></tr>
+        <tr><td><code>.github/instructions/*.instructions.md</code></td><td>When a file matches <code>applyTo</code>, or the <code>description</code> matches the task</td><td class="maybe">Sometimes</td></tr>
+        <tr><td><code>AGENTS.md</code></td><td>Every agent request; read by Copilot, Codex and others</td><td class="maybe">Sometimes</td></tr>
+        <tr><td><code>.github/prompts/*.prompt.md</code></td><td>Only when you run <code>/name</code></td><td>—</td></tr>
+        <tr><td><code>.github/agents/*.agent.md</code></td><td>When selected or delegated to</td><td class="no">Tool limits: no</td></tr>
+        <tr><td><code>.github/skills/&lt;name&gt;/SKILL.md</code></td><td>When the description matches</td><td class="maybe">Sometimes</td></tr>
+        <tr><td><code>.github/hooks/*.json</code></td><td>At lifecycle events</td><td class="no">No</td></tr>
+        <tr><td><code>.vscode/mcp.json</code></td><td>Tools offered every turn</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <figure class="shot">
+    <img src="../field-guide/images/customizations-editor.png" width="1910" height="631" alt="The Agent Customizations editor" loading="lazy">
+    <figcaption><em>Chat: Open Customizations</em> shows everything VS Code discovered. Screenshot: VS Code docs.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Instructions are context, not enforcement</h3><span class="chip">1.92</span></div>
+    <p class="def">Repo instructions travel with every request: Ask, Plan, Agent, custom agents and subagents. They are <em>not</em> used for inline ghost-text suggestions.</p>
+    <p>Prove they were used: expand <strong>References</strong> under an answer, or find the text in the Chat Debug view's system prompt. A harmless "canary" rule (<em>end every response with "📏 repo rules applied"</em>) makes it visible.</p>
+    <div class="box trap"><span class="k">Trap</span><p><code>applyTo</code> belongs in <code>*.instructions.md</code>. In a prompt file it does nothing. And a <code>copilot-instructions.md</code> in the repo root instead of <code>.github/</code> is silently ignored.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>AGENTS.md: a README for agents</h3><span class="chip">2.06</span></div>
+    <p>One short file of project-wide rules that every agent tool reads. Custom agents define <em>roles</em>; AGENTS.md defines <em>shared standards</em>. Nested files per folder are experimental in VS Code (<code>chat.useNestedAgentsMdFiles</code>).</p>
+    <div class="box trap"><span class="k">Trap</span><p>Everything that applies is combined into one prompt, and a custom agent's own body claims precedence. If the Designer's file says "use inline styles" and AGENTS.md says "no inline styles", don't rely on precedence. Remove the contradiction.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="skills">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 08 · Part B</span>
+    <h2>Skills</h2>
+    <p class="dek">On-demand know-how, with scripts and resources, that costs almost nothing until it's needed.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="../field-guide/images/card-catalog.jpg" width="1100" height="733" alt="An open library card catalog drawer" loading="lazy">
+      <figcaption>A card catalog. Photo: Michael Holley, Wikimedia Commons, public domain.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Agent Skills</h3><span class="chip">2.07 – 2.10</span></div>
+      <p class="def">A folder with a <code>SKILL.md</code> and optional scripts, templates and references. Only its name and description are in context until a task matches.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>A library gives you a card per book, not every book on your desk. You fetch the book whose card matches, and only open the appendix if the chapter sends you there. A skill's description is its catalog card.</p></div>
+    </div>
+  </div>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 230" role="img" aria-label="Progressive disclosure: level 1, name and description of every skill, always loaded; level 2, the SKILL.md body, when a task matches; level 3, linked scripts and references, only if the body points to them.">
+      <text x="20" y="26" class="d-h">PROGRESSIVE DISCLOSURE · PAY FOR KNOW-HOW ONLY WHEN YOU USE IT</text>
+      <rect x="20" y="48" width="680" height="46" rx="8" class="d-acc"/>
+      <text x="36" y="70" class="d-acc-t">1 · Name + description</text>
+      <text x="36" y="86" class="d-lbl">every skill, every turn</text>
+      <text x="684" y="76" text-anchor="end" class="d-lbl">react-widget: "Team standard for telemetry widgets… Use whenever…"</text>
+      <rect x="20" y="106" width="500" height="46" rx="8" class="d-box"/>
+      <text x="36" y="128" class="d-tb">2 · SKILL.md body</text>
+      <text x="36" y="144" class="d-lbl">only when the task matches</text>
+      <rect x="20" y="164" width="320" height="46" rx="8" class="d-soft"/>
+      <text x="36" y="186" class="d-tb">3 · scripts/, templates/</text>
+      <text x="36" y="202" class="d-lbl">only if linked from the body</text>
+      <text x="356" y="192" class="d-cap">list-scenarios.js, Widget.jsx.md</text>
+    </svg>
+    <figcaption>Forty skills in a repo cost forty one-line cards per request, not forty files.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The rules that bite</h3><span class="chip">2.08 · 2.10</span></div>
+    <ul>
+      <li><strong>The name must match the folder</strong> and be lowercase with hyphens. A bad name fails <em>silently</em>; it's the number one "my skill doesn't show up" cause.</li>
+      <li><strong>The description is the trigger.</strong> Say what it does and "Use when…", in the words users type.</li>
+      <li><strong>Scripts must print.</strong> An agent can only use what a script writes to the terminal.</li>
+      <li><strong>Vite projects are ES modules.</strong> A <code>.js</code> script with <code>require()</code> crashes there. Use <code>import</code>, or name it <code>.cjs</code>.</li>
+      <li><code>disable-model-invocation: true</code> makes a skill run only via <code>/name</code>; <code>user-invocable: false</code> hides it from the menu.</li>
+    </ul>
+    <div class="box trap"><span class="k">Trap</span><p>Community skills run code on your machine. Read the scripts before you add one, exactly as you would a dependency.</p></div>
+  </div>
+  <figure class="shot">
+    <img src="images/create-skill.png" width="1810" height="1130" alt="The Skills tab of the Agent Customizations editor with workspace and extension skills" loading="lazy">
+    <figcaption>The Skills tab. Screenshot: VS Code docs.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="hooks">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 09 · Part B</span>
+    <h2>Hooks</h2>
+    <p class="dek">Instructions are requests. Hooks are code that runs every time, at fixed points, and can say no.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="../field-guide/images/turnstile.jpg" width="1100" height="733" alt="Subway turnstiles" loading="lazy">
+      <figcaption>Turnstiles at 86 St, New York. Photo: Fabio Sola Penna, Wikimedia Commons, CC BY 2.0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Hooks</h3><span class="chip">2.12</span></div>
+      <p class="def">Commands the harness runs at lifecycle events. They get the event as JSON on stdin and can log it, add context, or block.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>"Please pay your fare" is an instruction. A turnstile is a hook. It doesn't care how persuasive you are.</p></div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The self-healing build loop</h3><span class="chip">2.12</span></div>
+    <p>A <code>PostToolUse</code> hook runs <code>npm run build</code> after every file edit. If it fails, the hook returns a structured block with the compiler output, and the agent fixes its own mistake.</p>
+    <pre><code>{ "hooks": { "PostToolUse": [
+  { "type": "command", "command": "node .github/hooks/scripts/build-validator.cjs", "timeout": 120 }
+] } }</code></pre>
+    <pre><code>// on failure, print and exit 0:
+{ "decision": "block",
+  "reason": "The project no longer builds. Fix the errors below.",
+  "hookSpecificOutput": { "hookEventName": "PostToolUse",
+    "additionalContext": "npm run build failed: Could not resolve ./BatteryWidget …" } }</code></pre>
+    <div class="box trap"><span class="k">Trap</span><p>There's no tool filter in the config: hooks fire for <em>every</em> tool call. Your script checks <code>tool_name</code> itself (<code>replace_string_in_file</code>, <code>create_file</code>, <code>apply_patch</code>…). Test it by piping fake events: <code>echo '{"tool_name":"create_file"}' | node …</code></p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Exit codes and events</h3><span class="chip">Local harness</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Exit</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>0</code></td><td>Success. Stdout is parsed as JSON.</td></tr>
+        <tr><td><code>2</code></td><td>Blocking error. Stderr goes to the model.</td></tr>
+        <tr><td>other</td><td>Warning only; processing continues.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Events: <code>SessionStart</code> · <code>UserPromptSubmit</code> · <code>PreToolUse</code> · <code>PostToolUse</code> · <code>PreCompact</code> · <code>SubagentStart</code> · <code>SubagentStop</code> · <code>Stop</code>. A <code>Stop</code> hook can say "not done yet" (guard it with <code>stop_hook_active</code>, or it loops and bills).</p>
+    <div class="box tidbit"><span class="k">Make guardrails guard themselves</span><p>A <code>PreToolUse</code> hook that denies edits to <code>.github/hooks/</code> means a confused agent can't switch off the hook that's blocking it. That's the difference between a rule and a lock.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="subagents">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 10 · Part C</span>
+    <h2>Agents, subagents, handoffs</h2>
+    <p class="dek">A custom agent is a definition. A subagent is an execution. A handoff is a button.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Side by side</h3><span class="chip">2.02 · 2.03</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Custom agent</th><th>Subagent</th><th>Handoff</th></tr></thead>
+      <tbody>
+        <tr><td><strong>What</strong></td><td>A role: persona, tools, model, hooks</td><td>A temporary worker another agent launches</td><td>A button to the next agent with a pre-filled prompt</td></tr>
+        <tr><td><strong>Started by</strong></td><td>You</td><td>The model, via <code>agent</code> tool</td><td>You, with a click</td></tr>
+        <tr><td><strong>Sees</strong></td><td>The conversation</td><td><strong>Only its task</strong>. Returns a summary.</td><td>The conversation</td></tr>
+        <tr><td><strong>In the course</strong></td><td>Orchestrator</td><td>Planner, Designer, Coder</td><td>Planner → "Build it"</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <figure>
+    <img src="../field-guide/images/pit-stop.jpg" width="1100" height="578" alt="A Formula 1 pit crew practising a pit stop" loading="lazy">
+    <figcaption>About 20 people, one job each, under three seconds. The race engineer gets a radio message: "done". That's a coordinator with subagents. Photo: pedrik, Wikimedia Commons, CC BY 2.0.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The frontmatter that matters</h3><span class="chip">2.02</span></div>
+    <pre><code>---
+name: Orchestrator
+description: Breaks work into phases and delegates. Never writes code.
+model: ['Claude Sonnet 5.5 (copilot)', 'GPT-5.6 Terra (copilot)']  # list = fallbacks
+tools: ['read/readFile', 'agent', 'vscode/memory']                 # no edit!
+agents: ['Planner', 'Designer', 'Coder']                           # who it may call
+---</code></pre>
+    <ul>
+      <li><code>user-invocable: false</code> hides a specialist from the picker; it's subagent-only.</li>
+      <li><code>disable-model-invocation: true</code> is the reverse: humans can pick it, agents can't call it. Good for an independent reviewer.</li>
+      <li>Nesting is off by default (<code>chat.subagents.allowInvocationsFromSubagents</code>, max depth 5).</li>
+      <li>No setting is needed any more to use custom agents as subagents.</li>
+    </ul>
+    <div class="box trap"><span class="k">Trap</span><p>A subagent <strong>doesn't inherit your conversation</strong>. Write its task like a ticket: goal, what it may touch, what to return. The requirement you typed three messages ago isn't there unless the coordinator passes it on.</p></div>
+    <div class="box analogy"><span class="k">Least privilege</span><p>A hotel key card opens your room, not every room. A Planner without <code>edit</code> can't edit, however confused it gets. Saltzer and Schroeder wrote the principle down in 1975; it fits agents perfectly.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="logs">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 11 · Part C</span>
+    <h2>Prove what happened</h2>
+    <p class="dek">"It worked" is a claim. Logs are the evidence.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="../field-guide/images/flight-recorder.jpg" width="600" height="450" alt="An orange flight data recorder" loading="lazy">
+      <figcaption>A flight data recorder. Photo: NTSB, Wikimedia Commons, public domain.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Two X-rays</h3><span class="chip">2.04</span></div>
+      <ul>
+        <li><strong>Chat Debug view</strong> (<code>/debug</code>): the exact system prompt, context, tools and response for each request. Is my instruction there? What did the model see about my MCP tool?</li>
+        <li><strong>Agent Debug Logs</strong>: a timeline of model calls, tool calls, subagents and discovery events, plus a <strong>flow chart</strong> and a token <strong>Summary</strong>.</li>
+      </ul>
+      <div class="box trap"><span class="k">Empty panel?</span><p>Logs aren't retroactive. Turn on <code>github.copilot.chat.agentDebugLog.fileLogging.enabled</code> and reload <em>before</em> the run.</p></div>
+    </div>
+  </div>
+  <div class="pair">
+    <figure class="shot"><img src="../field-guide/images/agent-flow-chart.png" width="1600" height="900" alt="The Agent Flow Chart" loading="lazy"><figcaption>Agent Flow Chart.</figcaption></figure>
+    <figure class="shot"><img src="../field-guide/images/agent-logs-summary.png" width="1808" height="1130" alt="The Summary view" loading="lazy"><figcaption>Summary. Screenshots: VS Code docs.</figcaption></figure>
+  </div>
+  <div class="entry">
+    <div class="prompt"><pre><code>/troubleshoot Which subagents ran, which model did each use, and which one used the most tokens?</code></pre></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="cloud">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 12 · Part C</span>
+    <h2>Local vs cloud agents</h2>
+    <p class="dek">The same <code>.agent.md</code> files can drive an agent on your laptop or in GitHub's cloud. Same format, very different execution.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Side by side</h3><span class="chip">2.13</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Local agent</th><th>Copilot cloud agent</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Runs on</strong></td><td>Your machine or a Dev Container</td><td>An ephemeral GitHub Actions sandbox</td></tr>
+        <tr><td><strong>Started from</strong></td><td>Chat, Agents window</td><td><strong>Assign to Copilot</strong> on an issue, the agents tab, VS Code, CLI, Slack, automations…</td></tr>
+        <tr><td><strong>You steer</strong></td><td>Live, in chat</td><td>Asynchronously, with <code>@copilot</code> PR comments</td></tr>
+        <tr><td><strong>Produces</strong></td><td>Edits in your working tree</td><td>A branch and a pull request</td></tr>
+        <tr><td><strong>Setup</strong></td><td>Already your dev box</td><td><code>copilot-setup-steps.yml</code></td></tr>
+        <tr><td><strong>Billing</strong></td><td>AI credits</td><td>AI credits + Actions minutes</td></tr>
+      </tbody>
+    </table></div>
+    <p>"Copilot coding agent" is now called <strong>Copilot cloud agent</strong> in GitHub's docs.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>What makes a good cloud task</h3><span class="chip">2.14</span></div>
+    <p class="def">Bounded, testable, PR-shaped, reviewable.</p>
+    <p>The incident lab delegates a retry bug: the service hammers a rate-limited provider, ignoring <code>Retry-After</code>. The issue states symptoms, suspected cause, acceptance criteria and how to validate (<code>npm test</code>). Issue quality decides PR quality.</p>
+    <div class="box trap"><span class="k">Review like a lead engineer</span><p>Check the diff is focused, tests would fail on the old code, nothing unrelated changed, and timing tests aren't flaky. <code>Retry-After</code> as an HTTP-date has one-second precision, so a 1.5-second threshold fails at random.</p></div>
+    <p class="rule-line">Delegate a bounded task, then review the PR like it's yours.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="mcp">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 13 · Part D · MCP</span>
+    <h2>What MCP is</h2>
+    <p class="dek">The Model Context Protocol is an open standard for connecting AI applications to tools and data. One plug shape, many devices.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/usb-c.jpg" width="1100" height="618" alt="A USB-C cable plug next to a USB-C port on the edge of a laptop" loading="lazy">
+      <figcaption>A USB-C plug and port. Photo: Wikideas1, Wikimedia Commons, CC0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>USB-C for AI</h3><span class="chip">3.01 · 3.02</span></div>
+      <p class="def">Before MCP, every AI app needed a custom integration for every tool. With MCP, each side implements the protocol once.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>Before USB, every printer, mouse and camera had its own connector and driver. USB-C means one port takes them all. Three AI apps and ten tools used to be 30 integrations; with MCP it's 13 implementations.</p></div>
+      <div class="box tidbit"><span class="k">Tidbit</span><p>Anthropic introduced MCP in November 2024 and donated it to the Linux Foundation's Agentic AI Foundation in December 2025, so no single vendor controls it.</p></div>
+    </div>
+  </div>
+
+  <figure class="shot">
+    <img src="images/mcp-diagram.png" width="1600" height="625" alt="AI applications on the left connect through MCP to data sources and tools on the right" loading="lazy">
+    <figcaption>MCP between AI applications and the systems they need. Diagram: modelcontextprotocol.io.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Host, client, server</h3><span class="chip">3.02</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Role</th><th>Who</th><th>Does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Host</strong></td><td>VS Code + Copilot</td><td>Runs the model, manages connections, shows approvals</td></tr>
+        <tr><td><strong>Client</strong></td><td>One per server, inside the host</td><td>Speaks MCP to exactly one server</td></tr>
+        <tr><td><strong>Server</strong></td><td>Your code or someone else's</td><td>Exposes capabilities and does the real work</td></tr>
+      </tbody>
+    </table></div>
+    <p class="rule-line">Copilot thinks. Servers act. Servers enforce.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Three primitives, three controllers</h3><span class="chip">3.02 · 4.01</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Primitive</th><th>Controlled by</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Tools</strong></td><td>The model decides to call them</td><td><code>run_sql_query</code>, <code>create_issue</code></td></tr>
+        <tr><td><strong>Resources</strong></td><td>The app or user attaches them</td><td><code>catalog://schema</code></td></tr>
+        <tr><td><strong>Prompts</strong></td><td>The user runs them</td><td><code>/service-catalog.incident-brief</code></td></tr>
+      </tbody>
+    </table></div>
+    <p>A server can also ask the <em>user</em> a question mid-call (<strong>elicitation</strong>, Chapter 19).</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>MCP is not RAG</h3><span class="chip">3.02</span></div>
+    <p>RAG retrieves documents into the prompt. MCP calls live systems and returns structured results, and can take actions. They combine: a docs server like Context7 is retrieval exposed over MCP, which is why the course's Coder agent checks it before writing code.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="protocol">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 14 · Part D · MCP</span>
+    <h2>One protocol, many transports</h2>
+    <p class="dek">JSON-RPC is the language. The transport is the delivery truck. Change the truck and the conversation stays the same.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/rosetta.jpg" width="945" height="1100" alt="The Rosetta Stone in its glass case at the British Museum" loading="lazy">
+      <figcaption>The Rosetta Stone, British Museum. Photo: APK, Wikimedia Commons, CC BY 4.0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Protocol vs transport</h3><span class="chip">3.03 · 3.08</span></div>
+      <p class="def">MCP messages are always JSON-RPC 2.0. They travel over <strong>stdio</strong> (a local process) or <strong>Streamable HTTP</strong> (a web endpoint).</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>The Rosetta Stone carries one decree in three scripts. The meaning didn't change with the script, which is exactly why it could be decoded. In Lab 3.08 you swap HTTP for stdio and the same tools behave identically.</p></div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The four message shapes</h3><span class="chip">3.03</span></div>
+    <pre><code>request       {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"run_sql_query","arguments":{…}}}
+result        {"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text":"[…]"}]}}
+error         {"jsonrpc":"2.0","id":3,"error":{"code":-32602,"message":"Unknown tool"}}
+notification  {"jsonrpc":"2.0","method":"notifications/initialized"}      ← no id, no reply (HTTP 202)</code></pre>
+    <div class="box trap"><span class="k">Why REST isn't MCP</span><p>Lab 3.05's first server has <code>GET /mcp</code> and <code>POST /mcp/call</code>. It looks reasonable, but Copilot sends JSON-RPC to <code>POST /mcp</code> starting with <code>initialize</code>, and gets a 404 page back. "Waiting for server to respond to initialize" in the Output log is the clue.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>stdio vs Streamable HTTP</h3><span class="chip">3.03</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>stdio</th><th>Streamable HTTP</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Who runs it</strong></td><td>VS Code spawns the process</td><td><strong>You</strong> start it; VS Code connects</td></tr>
+        <tr><td><strong>Network</strong></td><td>None</td><td>One endpoint, e.g. <code>POST /mcp</code></td></tr>
+        <tr><td><strong>Auth</strong></td><td>Runs as you</td><td>Tokens, OAuth</td></tr>
+        <tr><td><strong>Best for</strong></td><td>Local dev tools</td><td>Shared team services</td></tr>
+        <tr><td><strong>Logs go to</strong></td><td>stderr only (stdout is the protocol)</td><td>Anywhere</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box tidbit"><span class="k">Tidbit</span><p>The original 2024 "HTTP+SSE" transport is deprecated. In <code>mcp.json</code>, <code>"type": "http"</code> means Streamable HTTP.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="wiring">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 15 · Part D · MCP</span>
+    <h2>Wiring servers into VS Code</h2>
+    <p class="dek">Copilot doesn't scan anything. VS Code reads config, checks trust, starts or connects, lists tools, and hands them to the model.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The config file</h3><span class="chip">3.00 · 3.04</span></div>
+    <pre><code>// .vscode/mcp.json
+{
+  "inputs": [{ "type": "promptString", "id": "catalog-key", "description": "API key", "password": true }],
+  "servers": {
+    "service-db": { "type": "stdio", "command": "node",
+                    "args": ["${workspaceFolder}/mcp-server/stdio-server.js"] },
+    "catalog":    { "type": "http", "url": "http://localhost:4000/mcp",
+                    "headers": { "Authorization": "Bearer ${input:catalog-key}" } }
+  }
+}</code></pre>
+    <div class="box trap"><span class="k">servers vs mcpServers</span><p>VS Code's own <code>.vscode/mcp.json</code> uses <code>servers</code>. The portable root <code>.mcp.json</code>, the Inspector, Claude and Copilot CLI use <code>mcpServers</code>. Mixing them up is the top "my server doesn't appear" bug.</p></div>
+  </div>
+  <figure class="shot">
+    <img src="images/mcp-config-lenses.png" width="1199" height="523" alt="mcp.json with Running, Stop, Restart and tool count lenses above each server" loading="lazy">
+    <figcaption>Lenses above each server: Start, Running, Restart, N tools. No VS Code restart needed. Screenshot: VS Code docs.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Trust, startup, caching</h3><span class="chip">3.04</span></div>
+    <ul>
+      <li><strong>Trust:</strong> workspace servers inherit Workspace Trust. Others show a trust dialog the first time.</li>
+      <li><strong>HTTP servers:</strong> the <strong>Restart</strong> lens only reconnects. It doesn't run <code>node</code> for you.</li>
+      <li><strong>Stale tools:</strong> VS Code caches <code>tools/list</code>. After changing tools, restart the server or run <em>MCP: Reset Cached Tools</em>.</li>
+      <li><strong>Install from the gallery:</strong> search <code>@mcp</code> in the Extensions view.</li>
+      <li><strong>Debug:</strong> <em>MCP: List Servers → Show Output</em> shows the handshake and errors.</li>
+    </ul>
+  </div>
+  <div class="pair">
+    <figure class="shot"><img src="images/mcp-trust-dialog.png" width="699" height="331" alt="The MCP server trust dialog" loading="lazy"><figcaption>The trust dialog.</figcaption></figure>
+    <figure class="shot"><img src="images/mcp-extensions-view.png" width="1200" height="674" alt="Installed MCP servers in the Extensions view with a context menu" loading="lazy"><figcaption>Installed servers in the Extensions view. Screenshots: VS Code docs.</figcaption></figure>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="choosing">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 16 · Part D · MCP</span>
+    <h2>How the model picks a tool</h2>
+    <p class="dek">The model never makes a network call. It reads tool descriptions, asks for a call, and the host places it.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/switchboard.jpg" width="1100" height="874" alt="Rows of women working at a Bell System telephone switchboard" loading="lazy">
+      <figcaption>Bell System switchboard operators. Photo: U.S. National Archives, Wikimedia Commons, no known restrictions.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Model chooses, host connects</h3><span class="chip">3.06</span></div>
+      <p class="def">The model emits "call <code>run_sql_query</code> with this SQL". VS Code asks your permission, sends <code>tools/call</code>, and returns the result.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>A caller tells the operator who they want. The operator decides whether to connect, plugs the cord into the right jack and stays on the line. The caller never touches the wiring. The model is the caller; VS Code is the operator.</p></div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Descriptions are prompts</h3><span class="chip">3.06</span></div>
+    <p>Change a tool's description to <em>"Utility function"</em> and Copilot stops calling it. Write <em>"Query the service inventory (table services: name, owner, environment, criticality). Use for questions about which services exist…"</em> and it calls it immediately, with better SQL.</p>
+    <ul>
+      <li>The model chooses individual <strong>tools</strong>, not servers. A server is a toolbox.</li>
+      <li>Parameter descriptions matter too: valid values in the description mean fewer probing queries.</li>
+      <li>The Chat Debug view shows exactly what the model saw about your tool.</li>
+    </ul>
+    <p class="rule-line">Your tool description is prompt engineering.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>How it discovers a schema</h3><span class="chip">3.07</span></div>
+    <p>Nobody told Copilot the table names. Because the tool accepts raw SQL, it probes: <code>SELECT name FROM sqlite_master</code>, then <code>PRAGMA table_info(services)</code>. That's clever, and it's also exactly why raw SQL is dangerous: the same freedom that discovers can also <code>DROP TABLE</code>.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="boundary">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 17 · Part D · MCP</span>
+    <h2>The security boundary</h2>
+    <p class="dek">MCP lets a client call tools. It does not make those tools safe. Your server is the gate.</p>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/portcullis.jpg" width="1100" height="566" alt="A raised iron portcullis in a stone castle gateway" loading="lazy">
+      <figcaption>The portcullis gate at Raby Castle. Photo: Ian Greig, Wikimedia Commons, CC BY-SA 2.0.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Tool calls are untrusted input</h3><span class="chip">3.11</span></div>
+      <p class="def">Treat every <code>tools/call</code> like a form post from the internet. A misunderstanding, a careless prompt or injected text all arrive as perfectly valid JSON.</p>
+      <div class="box analogy"><span class="k">Analogy</span><p>The castle doesn't rely on visitors promising to behave. The gate decides who and what gets through, whatever the visitor says. In Lab 3.11, "Delete all prod services" deletes prod until the server's gate closes.</p></div>
+    </div>
+  </div>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 246" role="img" aria-label="A tool call from Copilot reaches the server boundary, which validates, restricts and logs. Allowed calls reach SQLite. Blocked calls return an isError result that the model reads and uses to pivot to the safe tool.">
+      <defs>
+        <marker id="m5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head"/></marker>
+        <marker id="m5s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head-stop"/></marker>
+        <marker id="m5a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-head-acc"/></marker>
+      </defs>
+      <text x="20" y="26" class="d-h">THE SERVER DECIDES · NOT THE MODEL</text>
+      <rect x="20" y="70" width="150" height="60" rx="8" class="d-box"/>
+      <text x="95" y="96" text-anchor="middle" class="d-tb">Copilot</text>
+      <text x="95" y="114" text-anchor="middle" class="d-cap">untrusted requester</text>
+      <rect x="250" y="50" width="200" height="100" rx="10" class="d-acc"/>
+      <text x="350" y="78" text-anchor="middle" class="d-acc-t">Server boundary</text>
+      <text x="350" y="100" text-anchor="middle" class="d-lbl">validate · restrict</text>
+      <text x="350" y="118" text-anchor="middle" class="d-lbl">dry-run · confirm · log</text>
+      <rect x="540" y="40" width="160" height="50" rx="8" class="d-go"/>
+      <text x="620" y="70" text-anchor="middle" class="d-go-t">SQLite</text>
+      <rect x="540" y="120" width="160" height="60" rx="8" class="d-stop"/>
+      <text x="620" y="145" text-anchor="middle" class="d-stop-t">isError: "Blocked…</text>
+      <text x="620" y="164" text-anchor="middle" class="d-stop-t">use the safe tool"</text>
+      <line x1="170" y1="100" x2="246" y2="100" class="d-line" marker-end="url(#m5)"/>
+      <text x="208" y="92" text-anchor="middle" class="d-lbl">tools/call</text>
+      <line x1="450" y1="80" x2="536" y2="66" class="d-line-acc" marker-end="url(#m5a)"/>
+      <text x="494" y="62" text-anchor="middle" class="d-lbl">allowed</text>
+      <line x1="450" y1="125" x2="536" y2="145" class="d-line-stop" marker-end="url(#m5s)"/>
+      <text x="494" y="158" text-anchor="middle" class="d-stop-t">blocked</text>
+      <path d="M620 182 C 620 226, 95 226, 95 134" class="d-line-stop" marker-end="url(#m5s)"/>
+      <text x="360" y="238" text-anchor="middle" class="d-lbl">the model reads the reason and pivots</text>
+    </svg>
+    <figcaption>Return policy blocks as a tool result with <code>isError: true</code>, not a protocol error. The model can read it and switch to the validated tool.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The defensive patterns</h3><span class="chip">3.11 · 3.12</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Pattern</th><th>In the course</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Capability checks over string checks</strong></td><td><code>stmt.reader</code> asks SQLite whether a statement only reads. <code>startsWith("SELECT")</code> wrongly blocks <code>WITH … SELECT</code> and is easy to fool.</td></tr>
+        <tr><td><strong>Defense in depth</strong></td><td>Also open the database <code>{ readonly: true }</code>, so a bug in your check can't hurt you.</td></tr>
+        <tr><td><strong>Remove the capability</strong></td><td>Replace <code>run_sql_query(query)</code> with three narrow tools that take enums and run fixed, parameterized queries.</td></tr>
+        <tr><td><strong>Dry-run by default</strong></td><td><code>delete_services_by_environment</code> previews unless told otherwise.</td></tr>
+        <tr><td><strong>Re-validate</strong></td><td>A schema <code>enum</code> guides well-behaved clients; the server still checks.</td></tr>
+        <tr><td><strong>Audit</strong></td><td>Log every call with its outcome.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box trap"><span class="k">The confirm-token trap</span><p>Lab 3.11's prod delete needs <code>confirmToken: "DELETE_PROD"</code>, but the token is written in the tool's description, so the model can supply it itself. That's a speed bump against accidents, not human confirmation. Real confirmation asks the <em>human</em>: elicitation, Chapter 19.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="design">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 18 · Part D · MCP</span>
+    <h2>Designing great tools</h2>
+    <p class="dek">A tool definition is an API contract and a prompt. Models read every word; programs rely on every field.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Anatomy of a tool (SDK v2)</h3><span class="chip">4.02</span></div>
+    <pre><code>server.registerTool("get_service_health", {
+  title: "Get service health",                                   // what humans see
+  description: "Current health snapshot for one service: status, " +
+               "error rate and p95 latency.",                    // what + when
+  inputSchema: z.object({ service: z.string().regex(/^[a-z0-9-]+$/) }),
+  outputSchema: Health,                                          // typed results
+  annotations: { readOnlyHint: true, idempotentHint: true },     // behavior hints
+}, async ({ service }) => {
+  const snapshot = await lookup(service);
+  return { content: [{ type: "text", text: JSON.stringify(snapshot) }],
+           structuredContent: snapshot };                        // both!
+});</code></pre>
+    <ul>
+      <li><strong>One job per tool</strong>, named <code>verb_noun</code>.</li>
+      <li><strong>Tight inputs</strong>: enums, ranges, patterns. Invalid input never reaches your handler.</li>
+      <li><strong>Output schema</strong>: the SDK refuses to send results that break your own contract ("Output validation error").</li>
+      <li><strong>Annotations</strong> (<code>readOnlyHint</code>, <code>destructiveHint</code>…) are hints for UX and approvals. Clients mustn't trust them from unknown servers.</li>
+      <li><strong>Bound your output</strong>: a 100,000-line log eats context and credits. Cap it and say so in the description.</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Two kinds of errors</h3><span class="chip">4.02</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Kind</th><th>Example</th><th>How</th><th>Who reads it</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Tool execution error</strong></td><td>Bad business input, policy block, failed API</td><td><code>isError: true</code> result (or throw)</td><td>The model, which can self-correct</td></tr>
+        <tr><td><strong>Protocol error</strong></td><td>Unknown tool, malformed request</td><td>JSON-RPC <code>error</code></td><td>The client</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box trap"><span class="k">Trap</span><p>A thrown error's message goes straight to the model, and into transcripts and logs. A raw database error can leak SQL, paths or hostnames. Catch it, sanitize it, return something helpful.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="beyond">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 19 · Part D · MCP</span>
+    <h2>Resources, prompts, elicitation</h2>
+    <p class="dek">Tools aren't the only primitive. Give users context they can attach, templates they can run, and a way for your server to ask them a question.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Resources and prompts</h3><span class="chip">4.01</span></div>
+    <ul>
+      <li><strong>Resources</strong>: <code>catalog://schema</code> or a template like <code>catalog://services/{name}</code>. In VS Code, <em>Add Context → MCP Resources</em>. The answer uses the record without a tool call.</li>
+      <li><strong>Prompts</strong>: <code>/service-catalog.incident-brief</code> asks for <code>service</code> and <code>symptom</code>, then sends a ready-made task. Arguments can autocomplete (<code>completable()</code>).</li>
+      <li><strong>Server instructions</strong>: one paragraph added to the system prompt of every client. <em>"Prefer list_services over raw SQL. Never guess owners."</em></li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Elicitation: the server asks the human</h3><span class="chip">4.03</span></div>
+    <p class="def">Mid-call, the server asks the user a structured question (a small form), and continues with the answer.</p>
+    <p><code>decommission_service</code> asks "Decommission analytics-worker (dev, low criticality, owned by Data Team)?" with a confirm box and a reason. Decline, and nothing is deleted.</p>
+  </div>
+
+  <figure class="diagram">
+    <svg viewBox="0 0 720 250" role="img" aria-label="Two eras of elicitation. Legacy era, used by VS Code today: during tools/call the server sends elicitation/create and waits for the answer. Modern era: the server returns input_required, and the client asks the user and retries the call with inputResponses.">
+      <text x="20" y="26" class="d-h">ONE CONFIRMATION · TWO ERAS</text>
+      <rect x="20" y="44" width="330" height="190" rx="10" class="d-amb"/>
+      <text x="185" y="70" text-anchor="middle" class="d-amb-t">Legacy (VS Code today)</text>
+      <text x="40" y="100" class="d-t">1 · client → tools/call</text>
+      <text x="40" y="126" class="d-t">2 · server → elicitation/create</text>
+      <text x="56" y="144" class="d-lbl">call waits on the open connection</text>
+      <text x="40" y="170" class="d-t">3 · user answers in a form</text>
+      <text x="40" y="196" class="d-t">4 · server finishes the call</text>
+      <text x="40" y="220" class="d-lbl">ctx.mcpReq.elicitInput(…)</text>
+      <rect x="370" y="44" width="330" height="190" rx="10" class="d-acc"/>
+      <text x="535" y="70" text-anchor="middle" class="d-acc-t">Modern (2026-07-28)</text>
+      <text x="390" y="100" class="d-t">1 · client → tools/call</text>
+      <text x="390" y="126" class="d-t">2 · server → result "input_required"</text>
+      <text x="390" y="152" class="d-t">3 · client asks the user</text>
+      <text x="390" y="178" class="d-t">4 · client retries with inputResponses</text>
+      <text x="390" y="204" class="d-t">5 · server completes</text>
+      <text x="390" y="224" class="d-lbl">return inputRequired(…)</text>
+    </svg>
+    <figcaption>The course's helper detects the era (<code>ctx.mcpReq.envelope</code> only exists on modern requests) and handles both.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="box trap"><span class="k">The bug we hit building the lab</span><p>In the modern branch, if the server only checks "do I have an accepted answer?", a <em>decline</em> looks the same as "haven't asked yet", so it asks again forever (the client gives up after 10 rounds). Check whether <em>any</em> answer arrived first.</p></div>
+    <div class="box tidbit"><span class="k">Two different gates</span><p>VS Code's tool approval asks "may the agent call this tool?". Elicitation asks "do you, the human, confirm this specific action, and why?". The second comes from the server, so a client's auto-approve setting can't skip it. And never ask for secrets in a form: use URL-mode elicitation or proper auth.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="remote">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 20 · Part D · MCP</span>
+    <h2>Remote servers &amp; sandboxing</h2>
+    <p class="dek">Once a server listens on a port, it's a web service. Once it runs locally, it runs as you.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>A remote server, minimum viable safety</h3><span class="chip">4.04</span></div>
+    <pre><code>const app = createMcpExpressApp({ host: "127.0.0.1" });   // Host-header allow-list on
+app.all("/mcp", requireApiKey,                            // bearer token, constant-time compare
+  (req, res) => mcp(req, res, req.body));                 // createMcpHandler: stateless, both eras
+app.listen(4000, "127.0.0.1");                            // loopback only</code></pre>
+    <ul>
+      <li><strong>DNS rebinding:</strong> a malicious web page makes your browser call <code>127.0.0.1</code> under its own hostname. Checking <code>Host</code> and <code>Origin</code> stops it (wrong Host → 403, even with the token).</li>
+      <li><strong>Secrets:</strong> <code>${input:catalog-key}</code> with <code>"password": true</code> keeps the key out of the repo.</li>
+      <li><strong>Next step:</strong> OAuth 2.1 so the server knows <em>who</em>, not just "someone with the key".</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Sandboxing local servers</h3><span class="chip">4.04 · macOS/Linux</span></div>
+    <pre><code>"sandbox": {
+  "filesystem": { "allowWrite": ["${workspaceFolder}/data"], "denyRead": ["~/.ssh", "~/.aws"] },
+  "network":    { "allowedDomains": ["registry.npmjs.org"] }
+},
+"servers": { "service-catalog": { "type": "stdio", "command": "node",
+  "args": ["${workspaceFolder}/mcp-server/catalog-server.js"], "sandboxEnabled": true } }</code></pre>
+    <p>Tool calls to sandboxed servers are auto-approved, because the sandbox is the safety net. Admins can require it.</p>
+    <div class="box analogy"><span class="k">Analogy</span><p>A sandboxed server is a contractor working in one room with the other doors locked. They can do the job; they can't wander into the study.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="testing">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 21 · Part D · MCP</span>
+    <h2>Inspector &amp; testing</h2>
+    <p class="dek">"It worked when I tried it in chat" isn't a test. Drive your server directly, without a model.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>MCP Inspector</h3><span class="chip">3.09 · 3.10</span></div>
+    <p class="def">The official debugging client: a web UI, a CLI and a TUI in one package. It shows the handshake, tool schemas, raw requests and responses, HTTP status codes and stderr.</p>
+    <pre><code>npx @modelcontextprotocol/inspector                        # web UI (opens a URL with a session token)
+npx @modelcontextprotocol/inspector --cli node server.js --method tools/list
+npx @modelcontextprotocol/inspector --cli http://localhost:3333/mcp --transport http \
+    --protocol-era legacy --method tools/call --tool-name run_sql_query --tool-arg "query=SELECT 1"</code></pre>
+    <p>Needs Node 22.19+. If Copilot is the black box, the Inspector is the glass box.</p>
+  </div>
+  <figure class="shot">
+    <img src="images/inspector-monitor.jpg" width="1600" height="900" alt="MCP Inspector web client after a tool call, with the Protocol monitor pinned on the right" loading="lazy">
+    <figcaption>The Inspector with the Protocol monitor pinned. Screenshot: modelcontextprotocol.io.</figcaption>
+  </figure>
+
+  <div class="entry">
+    <div class="entry-h"><h3>The mystery server</h3><span class="chip">3.10</span></div>
+    <p>Lab 3.10 hides three protocol bugs in one server. Each shows a different symptom:</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Symptom</th><th>Cause</th></tr></thead>
+      <tbody>
+        <tr><td>A declared tool vanishes</td><td>Its <code>inputSchema</code> lacks <code>"type": "object"</code>; clients drop invalid tools</td></tr>
+        <tr><td>A call "succeeds" with nothing in it</td><td><code>{ text }</code> instead of <code>{ content: [{ type: "text", text }] }</code></td></tr>
+        <tr><td>A call hangs for a minute</td><td>A hard-coded response <code>id</code>; the client can't match it to its request</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="photo-row">
+    <figure>
+      <img src="images/crash-test.jpg" width="1100" height="825" alt="A crash test dummy seated in the back seat of a test vehicle" loading="lazy">
+      <figcaption>A crash test dummy before a test. Photo: Karco Engineering for NHTSA, Wikimedia Commons, public domain.</figcaption>
+    </figure>
+    <div class="entry">
+      <div class="entry-h"><h3>Three layers of confidence</h3><span class="chip">4.05</span></div>
+      <ul>
+        <li><strong>Unit tests</strong> with <code>node:test</code> and the SDK's client: list tools, call them, read resources, assert.</li>
+        <li><strong>Contract gate</strong>: <code>inspector --cli … --method tools/list --strict</code> exits <code>6</code> on non-portable schemas (a <code>z.tuple</code> does it).</li>
+        <li><strong>Era check</strong>: run with <code>--protocol-era legacy</code> and <code>modern</code>.</li>
+      </ul>
+      <div class="box analogy"><span class="k">Analogy</span><p>Carmakers don't find out about crashes from customers. They crash cars on purpose, with dummies full of sensors. Your test suite is the dummy.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="stateless">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 22 · Part D · MCP</span>
+    <h2>MCP in 2026</h2>
+    <p class="dek">The July 2026 spec made MCP stateless. Here's what changed, and what it means for servers you write today.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Then vs now</h3><span class="chip">4.00</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Legacy (≤ 2025-11-25)</th><th>Modern (2026-07-28)</th></tr></thead>
+      <tbody>
+        <tr><td>Opening</td><td><code>initialize</code> → <code>initialized</code></td><td>None; optional <code>server/discover</code></td></tr>
+        <tr><td>Version</td><td>Negotiated once</td><td>On every request (<code>_meta</code> + header)</td></tr>
+        <tr><td>Sessions</td><td><code>Mcp-Session-Id</code></td><td>None; state lives in explicit handles</td></tr>
+        <tr><td>Asking the user</td><td>Server-initiated request</td><td><code>input_required</code> result + retry (MRTR)</td></tr>
+        <tr><td>Optional features</td><td>In core</td><td>Extensions: Apps, Tasks, …</td></tr>
+        <tr><td>Deprecated</td><td colspan="2">Sampling, roots, logging, HTTP+SSE (working for at least 12 more months)</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box trap"><span class="k">Where VS Code is</span><p>We checked VS Code 1.140: its built-in MCP client still opens with <code>initialize</code> (2025-11-25). So servers must speak the legacy era to work in VS Code today, ideally <strong>dual-era</strong> so modern clients work too.</p></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>SDK v2 entry points</h3><span class="chip">4.00</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Code</th><th>Eras served</th></tr></thead>
+      <tbody>
+        <tr><td><code>server.connect(new StdioServerTransport())</code></td><td>Legacy only (fine for VS Code)</td></tr>
+        <tr><td><code>serveStdio(() =&gt; buildServer())</code></td><td>Both, over stdio</td></tr>
+        <tr><td><code>createMcpHandler(() =&gt; buildServer())</code></td><td>Both, over HTTP, stateless</td></tr>
+      </tbody>
+    </table></div>
+    <p>Packages moved from <code>@modelcontextprotocol/sdk</code> (v1) to <code>@modelcontextprotocol/server</code> and <code>/client</code> (v2), with <code>z.object(…)</code> schemas from <code>zod/v4</code>. A model trained before mid-2026 will happily write v1 code, which is exactly the case for a docs MCP server.</p>
+    <div class="box tidbit"><span class="k">Watch it happen</span><p>Point the Inspector at Lab 3.05's hand-written server in <em>auto</em> mode. Your terminal shows <code>server/discover</code> → 404 → <code>initialize</code>: a modern client politely falling back to an older server.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="crib">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 23 · Reference</span>
+    <h2>Crib sheet</h2>
+    <p class="dek">Commands, file shapes and fixes you'll reach for, in one place.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>In chat</h3></div>
+    <div class="tbl"><table>
+      <tbody>
+        <tr><td><code>/plan</code></td><td>Research and plan first</td><td><code>/compact &lt;focus&gt;</code></td><td>Summarize history</td></tr>
+        <tr><td><code>/init</code></td><td>Draft repo instructions</td><td><code>/agents</code> <code>/skills</code> <code>/hooks</code></td><td>Open customizations</td></tr>
+        <tr><td><code>/create-skill</code></td><td>Generate a skill</td><td><code>/troubleshoot</code></td><td>Ask the debug logs</td></tr>
+        <tr><td><code>/debug</code></td><td>Chat Debug view</td><td><code>/&lt;server&gt;.&lt;prompt&gt;</code></td><td>Run an MCP prompt</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>MCP commands</h3></div>
+    <div class="tbl"><table>
+      <tbody>
+        <tr><td><em>MCP: List Servers</em></td><td>Start, stop, restart, Show Output</td></tr>
+        <tr><td><em>MCP: Reset Cached Tools</em></td><td>After changing a server's tools</td></tr>
+        <tr><td><em>MCP: Browse Resources</em></td><td>Explore a server's resources</td></tr>
+        <tr><td><em>MCP: Reset Trust</em></td><td>Forget trust decisions</td></tr>
+        <tr><td><code>@mcp</code> in Extensions</td><td>The MCP server gallery</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>Minimal MCP server (stdio, SDK v2)</h3></div>
+    <pre><code>import { McpServer } from "@modelcontextprotocol/server";
+import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
+import * as z from "zod/v4";
+
+const server = new McpServer({ name: "hello-mcp", version: "1.0.0" });
+server.registerTool("ping",
+  { description: "Connectivity check. Use when asked to test the MCP connection.",
+    inputSchema: z.object({}) },
+  async () => ({ content: [{ type: "text", text: "pong" }] }));
+
+console.error("started");          // stderr only — stdout is the protocol
+await server.connect(new StdioServerTransport());</code></pre>
+  </div>
+
+  <div class="entry">
+    <div class="entry-h"><h3>When something's wrong</h3></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td>"Waiting for server to respond to initialize"</td><td>Server isn't speaking JSON-RPC on <code>POST /mcp</code>, or isn't running</td></tr>
+        <tr><td><code>ERR_DLOPEN_FAILED</code></td><td>Node version mismatch with native modules</td></tr>
+        <tr><td>Server missing from the list</td><td><code>servers</code> vs <code>mcpServers</code>; untrusted workspace</td></tr>
+        <tr><td>Copilot sees old tools</td><td>Restart server or <em>Reset Cached Tools</em></td></tr>
+        <tr><td>Skill doesn't show up</td><td>Name must match folder, lowercase-hyphens</td></tr>
+        <tr><td>Hook never runs</td><td>Trusted workspace? Local harness? Valid JSON on stdout?</td></tr>
+        <tr><td><code>require is not defined</code></td><td>ES module project: use <code>import</code> or <code>.cjs</code></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section class="part" id="glossary">
+  <div class="part-h">
+    <span class="eyebrow">Chapter 24 · Reference</span>
+    <h2>Glossary A–Z</h2>
+    <p class="dek">Every term in one list, each linked to the chapter that explains it.</p>
+  </div>
+  <div class="gloss-tools">
+    <label for="gq" class="chip" style="border:0;padding:0">Filter</label>
+    <input id="gq" type="search" placeholder="Type a term, e.g. elicitation" autocomplete="off">
+    <output id="gcount" for="gq"></output>
+  </div>
+  <dl class="gloss" id="gloss">
+    <dt>AGENTS.md</dt><dd>A cross-tool README for AI agents: short, project-wide rules. <a href="#guidance">Ch 07</a></dd>
+    <dt>Agent Debug Logs</dt><dd>Timeline of model calls, tool calls, subagents and discovery, with a flow chart and token summary. <a href="#logs">Ch 11</a></dd>
+    <dt>AI Credits</dt><dd>Usage-based billing since June 1, 2026: 1 credit = $0.01, metered by tokens. <a href="#credits">Ch 03</a></dd>
+    <dt>Annotations</dt><dd>Tool hints like <code>readOnlyHint</code> and <code>destructiveHint</code>. Untrusted from unknown servers. <a href="#design">Ch 18</a></dd>
+    <dt>applyTo</dt><dd>Glob in <code>*.instructions.md</code> that auto-attaches it to matching files. Does nothing in prompt files. <a href="#guidance">Ch 07</a></dd>
+    <dt>Checkpoint</dt><dd>Snapshot of files and chat per request. Doesn't undo terminal commands or MCP calls. <a href="#plan">Ch 06</a></dd>
+    <dt>Cloud agent</dt><dd>Copilot running in a GitHub Actions sandbox, returning a PR. Formerly "coding agent". <a href="#cloud">Ch 12</a></dd>
+    <dt>Context rot</dt><dd>Quality drop as the context grows. <a href="#context">Ch 05</a></dd>
+    <dt>Custom agent</dt><dd>An <code>.agent.md</code> role: persona, tools, model, allowed subagents, handoffs. <a href="#subagents">Ch 10</a></dd>
+    <dt>DNS rebinding</dt><dd>A web page reaching your localhost server under its own hostname. Stopped by Host/Origin checks. <a href="#remote">Ch 20</a></dd>
+    <dt>Dual-era</dt><dd>A client or server that speaks both the legacy handshake and the 2026 stateless protocol. <a href="#stateless">Ch 22</a></dd>
+    <dt>Elicitation</dt><dd>A server asking the user a structured question mid-call. <a href="#beyond">Ch 19</a></dd>
+    <dt>Handoff</dt><dd>A button to the next agent with a pre-filled prompt. <a href="#subagents">Ch 10</a></dd>
+    <dt>Harness</dt><dd>The engine that runs the agent loop: Local, Copilot, Claude, Codex, Cloud. <a href="#harness">Ch 02</a></dd>
+    <dt>Hook</dt><dd>A command the harness runs at a lifecycle event; can block. <a href="#hooks">Ch 09</a></dd>
+    <dt>Host, client, server</dt><dd>The three MCP roles: VS Code hosts, one client per server, servers expose capabilities. <a href="#mcp">Ch 13</a></dd>
+    <dt>initialize</dt><dd>The legacy MCP handshake request. VS Code still sends it. <a href="#protocol">Ch 14</a></dd>
+    <dt>Inspector</dt><dd>The official MCP debugging client: web, CLI and TUI. <a href="#testing">Ch 21</a></dd>
+    <dt>isError</dt><dd>A tool result flagging an execution error the model can read and recover from. <a href="#design">Ch 18</a></dd>
+    <dt>JSON-RPC 2.0</dt><dd>The message format of every MCP message: request, result, error, notification. <a href="#protocol">Ch 14</a></dd>
+    <dt>Least privilege</dt><dd>Give each agent or tool only what its job needs. <a href="#subagents">Ch 10</a></dd>
+    <dt>MCP</dt><dd>Model Context Protocol: the open standard connecting AI apps to tools and data. <a href="#mcp">Ch 13</a></dd>
+    <dt>mcp.json</dt><dd><code>.vscode/mcp.json</code>: VS Code's server config, top-level <code>servers</code>. <a href="#wiring">Ch 15</a></dd>
+    <dt>MRTR</dt><dd>Multi Round-Trip Requests: return <code>input_required</code>, the client retries with answers. <a href="#stateless">Ch 22</a></dd>
+    <dt>outputSchema</dt><dd>A tool's declared result shape; the SDK validates <code>structuredContent</code> against it. <a href="#design">Ch 18</a></dd>
+    <dt>Plan agent</dt><dd>Built-in agent that researches and plans before code. <a href="#plan">Ch 06</a></dd>
+    <dt>Progressive disclosure</dt><dd>Skills load description → body → resources only as needed. <a href="#skills">Ch 08</a></dd>
+    <dt>Prompt (MCP)</dt><dd>A user-run template a server exposes, e.g. <code>/server.prompt</code>. <a href="#beyond">Ch 19</a></dd>
+    <dt>Prompt file</dt><dd><code>*.prompt.md</code>: a saved task you run with <code>/name</code>. <a href="#guidance">Ch 07</a></dd>
+    <dt>Resource</dt><dd>Context a server exposes by URI for the user or app to attach. <a href="#beyond">Ch 19</a></dd>
+    <dt>Sandbox</dt><dd>VS Code restricting a local MCP server's file and network access. <a href="#remote">Ch 20</a></dd>
+    <dt>server/discover</dt><dd>The optional 2026 call for a server's versions and capabilities; legacy servers answer 404. <a href="#stateless">Ch 22</a></dd>
+    <dt>Session Target</dt><dd>The picker that chooses the harness. <a href="#harness">Ch 02</a></dd>
+    <dt>Skill</dt><dd>A folder with <code>SKILL.md</code>, loaded when its description matches. <a href="#skills">Ch 08</a></dd>
+    <dt>stdio</dt><dd>MCP over a local process's stdin and stdout. VS Code starts it. <a href="#protocol">Ch 14</a></dd>
+    <dt>Streamable HTTP</dt><dd>MCP over one HTTP endpoint. You start the server. <a href="#protocol">Ch 14</a></dd>
+    <dt>structuredContent</dt><dd>Typed tool result data; also send a text block for older clients. <a href="#design">Ch 18</a></dd>
+    <dt>Subagent</dt><dd>A worker with a fresh context that returns only its result. <a href="#subagents">Ch 10</a></dd>
+    <dt>Token</dt><dd>About ¾ of a word. The unit you pay in. <a href="#credits">Ch 03</a></dd>
+    <dt>Tool</dt><dd>A model-callable action, built in or from an MCP server. <a href="#choosing">Ch 16</a></dd>
+  </dl>
+  <p class="gloss-empty" id="gempty" hidden>No term matches that. Try a shorter word.</p>
+</section>
+
+<footer class="foot">
+  <p><strong>Course:</strong> the full labs live in the <a href="https://github.com/varoonsahgal/cg-ai-material/wiki/">CG AI course wiki</a>. For the Java hands-on lab, see the <a href="../field-guide/">Copilot Field Guide</a>.</p>
+  <p><strong>Sources:</strong> VS Code docs and release notes (agents, customization, hooks, subagents, MCP servers and configuration, Agent Debug Logs; 1.99–1.141); GitHub Docs and changelog (usage-based billing, models and pricing, Copilot cloud agent, Agent Plugins 1.0); Model Context Protocol specification 2025-11-25 and 2026-07-28, MCP blog, MCP Inspector docs, TypeScript SDK v2 docs; Chroma, <em>Context Rot</em> (2025); METR (2025); Saltzer &amp; Schroeder (1975). Code in Part D was tested against the v2 SDK and MCP Inspector 2.10 in both protocol eras.</p>
+  <p><strong>Images:</strong> screenshots and diagrams from the VS Code documentation (Microsoft) and modelcontextprotocol.io; context-rot chart from Chroma. Photos via Wikimedia Commons: USB-C, Wikideas1 (CC0); switchboard operators, U.S. National Archives (no known restrictions); Rosetta Stone, APK (CC BY 4.0); Raby Castle portcullis, Ian Greig (CC BY-SA 2.0); crash test, Karco Engineering for NHTSA (public domain); and from the Field Guide: taxi meter (public domain), learner car, TudorTulok (CC0), quickdraw, Cristian Bortes (CC BY 2.0), card catalog, Michael Holley (public domain), turnstiles, Fabio Sola Penna (CC BY 2.0), pit stop, pedrik (CC BY 2.0), flight recorder, NTSB (public domain).</p>
+  <p>Written for VS Code 1.140+ in October 2026. VS Code ships weekly: if a menu has moved, search the Command Palette.</p>
+</footer>
+
+</main>
+</div>
+
+<script>
+(function () {
+  // Glossary filter
+  var q = document.getElementById('gq');
+  var list = document.getElementById('gloss');
+  var count = document.getElementById('gcount');
+  var empty = document.getElementById('gempty');
+  var dts = Array.prototype.slice.call(list.querySelectorAll('dt'));
+  function filter() {
+    var term = q.value.trim().toLowerCase();
+    var shown = 0;
+    dts.forEach(function (dt) {
+      var dd = dt.nextElementSibling;
+      var hit = !term || dt.textContent.toLowerCase().indexOf(term) !== -1 || dd.textContent.toLowerCase().indexOf(term) !== -1;
+      dt.hidden = !hit; dd.hidden = !hit;
+      if (hit) shown++;
+    });
+    count.textContent = shown + ' of ' + dts.length + ' terms';
+    empty.hidden = shown !== 0;
+  }
+  q.addEventListener('input', filter);
+  filter();
+
+  // Copy buttons on prompts
+  document.querySelectorAll('.prompt').forEach(function (box) {
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'copy'; btn.textContent = 'Copy';
+    btn.addEventListener('click', function () {
+      var text = box.querySelector('code').textContent;
+      function done(label) { btn.textContent = label; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(box.querySelector('code'));
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done('Press ⌘C');
+      }
+      try { navigator.clipboard.writeText(text).then(function () { done('Copied'); }, fallback); } catch (e) { fallback(); }
+    });
+    box.appendChild(btn);
+  });
+
+  // Collapse the chapter index on narrow screens
+  var toc = document.getElementById('toc');
+  var mq = window.matchMedia('(max-width: 980px)');
+  function syncToc() { if (mq.matches) toc.removeAttribute('open'); else toc.setAttribute('open', ''); }
+  syncToc();
+  if (mq.addEventListener) mq.addEventListener('change', syncToc);
+  toc.querySelector('summary').addEventListener('click', function (e) { if (!mq.matches) e.preventDefault(); });
+  toc.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { if (mq.matches) toc.removeAttribute('open'); }); });
+
+  // Highlight the current chapter
+  var links = {};
+  toc.querySelectorAll('a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var current = null;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          if (current) current.classList.remove('on');
+          current = links[en.target.id];
+          if (current) current.classList.add('on');
+        }
+      });
+    }, { rootMargin: '-15% 0px -75% 0px' });
+    document.querySelectorAll('section.part').forEach(function (s) { io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
+

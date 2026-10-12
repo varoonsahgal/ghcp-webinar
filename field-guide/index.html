@@ -114,6 +114,7 @@ main { min-width: 0; }
 
 /* Concept entries */
 .entry { display: grid; gap: 0.7rem; padding-block: 1.6rem; border-top: 1px dashed var(--rule); max-width: 74ch; }
+.entry { grid-template-columns: minmax(0, 1fr); } /* keep wide code blocks from stretching the column on phones */
 .part-h + .entry, .entry.first { border-top: 0; padding-top: 0.25rem; }
 .entry-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 0.75rem; }
 .entry h3 { font-family: var(--f-body); font-weight: 600; font-size: var(--s-3); line-height: 1.25; margin: 0; letter-spacing: -0.01em; }
@@ -1490,6 +1491,7 @@ Return a Markdown table: | # | Severity | File:line | Problem | Example | Fix |<
 <footer class="foot">
   <p><strong>Sources:</strong> VS Code docs and release notes (agents, context, checkpoints, customization, hooks, subagents, Agent Debug Logs; 1.120–1.140); GitHub blog and changelog (usage-based billing, Auto model selection, HydraFusion); Chroma, <em>Context Rot</em> (2025); Liu et al., <em>Lost in the Middle</em> (2023); METR, early-2025 developer productivity study (2025); Anthropic, <em>How we built our multi-agent research system</em> (2025); Panickssery, Bowman &amp; Feng, <em>LLM Evaluators Recognize and Favor Their Own Generations</em> (2024); Saltzer &amp; Schroeder (1975); Reason, <em>Human Error</em> (1990); Miller (1956); Beck, <em>Test-Driven Development: By Example</em> (2002); Bloch, <em>Effective Java</em>; SAE J3016; PCI DSS; SEC T+1 rule (2024); reporting on Knight Capital (2012), the Vancouver Stock Exchange index (1982–83), the Boeing Model 299 (1935) and the Replit incident (2025).</p>
   <p><strong>Images:</strong> screenshots and diagrams from the VS Code documentation and release notes (Microsoft); context-rot chart from Chroma (github.com/chroma-core/context-rot); squad architecture from the lab handout. Photos via Wikimedia Commons: taxi meter (public domain); learner car, TudorTulok (CC0); quickdraw, Cristian Bortes (CC BY 2.0); card catalog, Michael Holley (public domain); turnstiles, Fabio Sola Penna (CC BY 2.0); pit stop, pedrik (CC BY 2.0); relay baton, Irish Defence Forces (CC BY 2.0); checklist, US Air Force (public domain); flight data recorder, NTSB (public domain).</p>
+  <p><strong>Going further:</strong> the <a href="../course-guide/">Agents &amp; MCP Field Guide</a> covers MCP servers, agent teams and the rest of the CG AI course.</p>
   <p>Written for VS Code 1.140 and the October 2026 edition of the lab. VS Code ships weekly: if a menu has moved, search the Command Palette.</p>
 </footer>
 

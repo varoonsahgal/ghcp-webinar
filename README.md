@@ -11,6 +11,8 @@
 
 > [!TIP]
 > **📘 Companion: the [Copilot Field Guide](https://varoonsahgal.github.io/ghcp-webinar/field-guide/)** explains every concept in this lab in more depth, with analogies, diagrams and a searchable glossary. Keep it open beside the handout. (Source: [`field-guide/`](field-guide/).)
+>
+> **🔌 Going further: the [Agents & MCP Field Guide](https://varoonsahgal.github.io/ghcp-webinar/course-guide/)** covers the full CG AI course, including agent teams, skills, hooks and a complete Model Context Protocol section. (Source: [`course-guide/`](course-guide/).)
 
 ### ☕ Before class: install Java and Maven
 
